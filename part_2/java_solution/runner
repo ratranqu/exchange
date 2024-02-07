@@ -1,2 +1,2 @@
 #!/bin/sh
-java -jar Exchange.jar
+java -jar out/artifacts/Exchange_jar/Exchange.jar
