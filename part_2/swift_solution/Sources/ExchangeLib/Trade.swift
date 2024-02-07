@@ -1,5 +1,5 @@
 
-public class Trade
+public struct Trade
 {
     let buyer: String
     let seller: String
