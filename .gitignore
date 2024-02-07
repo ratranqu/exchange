@@ -4,7 +4,7 @@
 /*.xcodeproj
 Package.pins
 *.o
-/Exchange
+*/c_solution/Exchange
 exchange_tests
 order_book_tests
 order_tests
