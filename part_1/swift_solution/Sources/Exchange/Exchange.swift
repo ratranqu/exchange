@@ -1,8 +1,11 @@
 import ExchangeLib
 import ArgumentParser
 import Parsing
-import Darwin
 
+#if os(Linux)
+#else
+import Darwin
+#endif
 
 @main
 struct Exchange: ParsableCommand {
