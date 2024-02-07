@@ -46,5 +46,5 @@ RUN curl -SL https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0
 # Swift
 #
 RUN wget -q https://download.swift.org/development/ubuntu2204/swift-DEVELOPMENT-SNAPSHOT-2024-02-05-a/swift-DEVELOPMENT-SNAPSHOT-2024-02-05-a-ubuntu22.04.tar.gz \
-    && tar zxf swift-DEVELOPMENT-SNAPSHOT-2024-02-05-a-ubuntu22.04.tar.g --strip-components=1 -C /
+    && tar zxf swift-DEVELOPMENT-SNAPSHOT-2024-02-05-a-ubuntu22.04.tar.gz --strip-components=1 -C /
 
