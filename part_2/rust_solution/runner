@@ -1,3 +1,4 @@
 #!/bin/sh
+chmod u+x ./target/release/exchange
 ./target/release/exchange
 
