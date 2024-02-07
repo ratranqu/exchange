@@ -27,9 +27,6 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: part_1_cython	
-        path: ./part_1/cython_solution/Exchange.so
-    - name: upload runner
-      uses: actions/upload-artifact@v4
-      with:
-        name: part_1_cython	
-        path: ./part_1/cython_solution/runner 
+        path: |
+          ./part_1/cython_solution/Exchange.so
+          ./part_1/cython_solution/runner 
