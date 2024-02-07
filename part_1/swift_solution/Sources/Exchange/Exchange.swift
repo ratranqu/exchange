@@ -3,6 +3,7 @@ import ArgumentParser
 import Parsing
 
 #if os(Linux)
+import Glibc
 #else
 import Darwin
 #endif
