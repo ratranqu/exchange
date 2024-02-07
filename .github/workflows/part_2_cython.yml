@@ -24,12 +24,12 @@ jobs:
       working-directory: './part_2/cython_solution'
       run: python3 setup.py build_ext --inplace
     - name: upload Exchange
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: part_2_cython	
         path: ./part_2/cython_solution/Exchange.so
     - name: upload runner
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: part_2_cython	
         path: ./part_2/cython_solution/runner 

@@ -28,12 +28,12 @@ jobs:
         go get -v -t -d ./...
         go build -v .
     - name: upload Exchange
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: part_1_go
         path: ./part_1/go_solution/Exchange 
     - name: upload runner
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: part_1_go	
         path: ./part_1/go_solution/runner 
