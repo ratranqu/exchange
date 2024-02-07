@@ -35,6 +35,15 @@ public class Order
         quantity = parsedQuantity
         price = parsedPrice
     }
+
+    public init(participant: String, instrument: String, quantity: Int, price: Double) {
+        precondition(quantity != 0)
+        self.participant = participant
+        self.instrument = instrument
+        self.quantity = quantity
+        self.price = price
+    }
+
 }
 
 public enum OrderError : Error
