@@ -21,7 +21,7 @@ class OrderBookTests : XCTestCase
         XCTAssertEqual(orderBook.sellOrders.count, 0)
         XCTAssertEqual(trades.count, 0)
 
-        let one = orderBook.buyOrders.dequeue()!
+        let one = orderBook.buyOrders.pop()!
         XCTAssertEqual(one.participant, "A")
         XCTAssertEqual(one.instrument, "AUDUSD")
         XCTAssertEqual(one.quantity, 100)
@@ -38,7 +38,7 @@ class OrderBookTests : XCTestCase
         XCTAssertEqual(orderBook.sellOrders.count, 1)
         XCTAssertEqual(trades.count, 0)
 
-        let two = orderBook.sellOrders.dequeue()!
+        let two = orderBook.sellOrders.pop()!
         XCTAssertEqual(two.participant, "B")
         XCTAssertEqual(two.instrument, "AUDUSD")
         XCTAssertEqual(two.quantity, -100)
@@ -58,19 +58,19 @@ class OrderBookTests : XCTestCase
         XCTAssertEqual(orderBook.sellOrders.count, 0)
         XCTAssertEqual(trades.count, 0)
 
-        let one = orderBook.buyOrders.dequeue()!
+        let one = orderBook.buyOrders.pop()!
         XCTAssertEqual(one.participant, "C")
         XCTAssertEqual(one.instrument, "AUDUSD")
         XCTAssertEqual(one.quantity, 300)
         XCTAssertEqual(one.price, 1.49)
 
-        let two = orderBook.buyOrders.dequeue()!
+        let two = orderBook.buyOrders.pop()!
         XCTAssertEqual(two.participant, "B")
         XCTAssertEqual(two.instrument, "AUDUSD")
         XCTAssertEqual(two.quantity, 200)
         XCTAssertEqual(two.price, 1.48)
 
-        let three = orderBook.buyOrders.dequeue()!
+        let three = orderBook.buyOrders.pop()!
         XCTAssertEqual(three.participant, "A")
         XCTAssertEqual(three.instrument, "AUDUSD")
         XCTAssertEqual(three.quantity, 100)
@@ -90,19 +90,19 @@ class OrderBookTests : XCTestCase
         XCTAssertEqual(orderBook.sellOrders.count, 3)
         XCTAssertEqual(trades.count, 0)
 
-        let one = orderBook.sellOrders.dequeue()!
+        let one = orderBook.sellOrders.pop()!
         XCTAssertEqual(one.participant, "C")
         XCTAssertEqual(one.instrument, "AUDUSD")
         XCTAssertEqual(one.quantity, -300)
         XCTAssertEqual(one.price, 1.47)
 
-        let two = orderBook.sellOrders.dequeue()!
+        let two = orderBook.sellOrders.pop()!
         XCTAssertEqual(two.participant, "B")
         XCTAssertEqual(two.instrument, "AUDUSD")
         XCTAssertEqual(two.quantity, -200)
         XCTAssertEqual(two.price, 1.48)
 
-        let three = orderBook.sellOrders.dequeue()!
+        let three = orderBook.sellOrders.pop()!
         XCTAssertEqual(three.participant, "A")
         XCTAssertEqual(three.instrument, "AUDUSD")
         XCTAssertEqual(three.quantity, -100)
@@ -122,19 +122,19 @@ class OrderBookTests : XCTestCase
         XCTAssertEqual(orderBook.sellOrders.count, 0)
         XCTAssertEqual(trades.count, 0)
 
-        let one = orderBook.buyOrders.dequeue()!
+        let one = orderBook.buyOrders.pop()!
         XCTAssertEqual(one.participant, "A")
         XCTAssertEqual(one.instrument, "AUDUSD")
         XCTAssertEqual(one.quantity, 100)
         XCTAssertEqual(one.price, 1.47)
 
-        let two = orderBook.buyOrders.dequeue()!
+        let two = orderBook.buyOrders.pop()!
         XCTAssertEqual(two.participant, "B")
         XCTAssertEqual(two.instrument, "AUDUSD")
         XCTAssertEqual(two.quantity, 200)
         XCTAssertEqual(two.price, 1.47)
 
-        let three = orderBook.buyOrders.dequeue()!
+        let three = orderBook.buyOrders.pop()!
         XCTAssertEqual(three.participant, "C")
         XCTAssertEqual(three.instrument, "AUDUSD")
         XCTAssertEqual(three.quantity, 300)
@@ -154,19 +154,19 @@ class OrderBookTests : XCTestCase
         XCTAssertEqual(orderBook.sellOrders.count, 3)
         XCTAssertEqual(trades.count, 0)
 
-        let one = orderBook.sellOrders.dequeue()!
+        let one = orderBook.sellOrders.pop()!
         XCTAssertEqual(one.participant, "A")
         XCTAssertEqual(one.instrument, "AUDUSD")
         XCTAssertEqual(one.quantity, -100)
         XCTAssertEqual(one.price, 1.47)
 
-        let two = orderBook.sellOrders.dequeue()!
+        let two = orderBook.sellOrders.pop()!
         XCTAssertEqual(two.participant, "B")
         XCTAssertEqual(two.instrument, "AUDUSD")
         XCTAssertEqual(two.quantity, -200)
         XCTAssertEqual(two.price, 1.47)
 
-        let three = orderBook.sellOrders.dequeue()!
+        let three = orderBook.sellOrders.pop()!
         XCTAssertEqual(three.participant, "C")
         XCTAssertEqual(three.instrument, "AUDUSD")
         XCTAssertEqual(three.quantity, -300)
@@ -185,13 +185,13 @@ class OrderBookTests : XCTestCase
         XCTAssertEqual(orderBook.sellOrders.count, 1)
         XCTAssertEqual(trades.count, 0)
 
-        let buy = orderBook.buyOrders.dequeue()!
+        let buy = orderBook.buyOrders.pop()!
         XCTAssertEqual(buy.participant, "A")
         XCTAssertEqual(buy.instrument, "AUDUSD")
         XCTAssertEqual(buy.quantity, 100)
         XCTAssertEqual(buy.price, 1.47)
 
-        let sell = orderBook.sellOrders.dequeue()!
+        let sell = orderBook.sellOrders.pop()!
         XCTAssertEqual(sell.participant, "B")
         XCTAssertEqual(sell.instrument, "AUDUSD")
         XCTAssertEqual(sell.quantity, -100)
@@ -254,7 +254,7 @@ class OrderBookTests : XCTestCase
         XCTAssertEqual(trades[0].quantity, 100)
         XCTAssertEqual(trades[0].price, 1.47)
 
-        let buy = orderBook.buyOrders.dequeue()!
+        let buy = orderBook.buyOrders.pop()!
         XCTAssertEqual(buy.participant, "A")
         XCTAssertEqual(buy.instrument, "AUDUSD")
         XCTAssertEqual(buy.remainingQuantity, 150)
@@ -279,7 +279,7 @@ class OrderBookTests : XCTestCase
         XCTAssertEqual(trades[0].quantity, 100)
         XCTAssertEqual(trades[0].price, 1.47)
 
-        let sell = orderBook.sellOrders.dequeue()!
+        let sell = orderBook.sellOrders.pop()!
         XCTAssertEqual(sell.participant, "A")
         XCTAssertEqual(sell.instrument, "AUDUSD")
         XCTAssertEqual(sell.remainingQuantity, 150)
@@ -311,7 +311,7 @@ class OrderBookTests : XCTestCase
         XCTAssertEqual(trades[1].quantity, 50)
         XCTAssertEqual(trades[1].price, 1.46)
 
-        let buy = orderBook.buyOrders.dequeue()!
+        let buy = orderBook.buyOrders.pop()!
         XCTAssertEqual(buy.participant, "B")
         XCTAssertEqual(buy.instrument, "AUDUSD")
         XCTAssertEqual(buy.remainingQuantity, 150)
@@ -343,7 +343,7 @@ class OrderBookTests : XCTestCase
         XCTAssertEqual(trades[1].quantity, 50)
         XCTAssertEqual(trades[1].price, 1.48)
 
-        let sell = orderBook.sellOrders.dequeue()!
+        let sell = orderBook.sellOrders.pop()!
         XCTAssertEqual(sell.participant, "B")
         XCTAssertEqual(sell.instrument, "AUDUSD")
         XCTAssertEqual(sell.remainingQuantity, 150)

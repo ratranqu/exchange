@@ -1,44 +1,28 @@
 
+import SwiftPriorityQueue
+
 class OrderBook
 {
-    var buyOrders: PriorityQueue<Order> = PriorityQueue<Order>(sort: { (lhs, rhs) -> Bool in
-       
-        assert(lhs.quantity >= 0)
-        assert(lhs.quantity >= 0)
-        
-        if rhs.price == lhs.price {
-            return lhs.generation < rhs.generation;
-        }
-        
-        return rhs.price < lhs.price
-    })
+    var buyOrders: PriorityQueue<Order> = PriorityQueue<Order>(ascending: true)
     
-    var sellOrders: PriorityQueue<Order> = PriorityQueue<Order>(sort: { (lhs, rhs) -> Bool in
-        
-        assert(lhs.quantity < 0)
-        assert(rhs.quantity < 0)
-        
-        if lhs.price == rhs.price {
-            return lhs.generation < rhs.generation
-        }
-        
-        return lhs.price < rhs.price
-    })
+    var sellOrders: PriorityQueue<Order> = PriorityQueue<Order>(ascending: false)
     
     public func execute(order: Order) -> [Trade]
     {
         var trades : [Trade] = []
 
-        if order.quantity > 0
-        {
-            buyOrders.enqueue(order)
+        // TODO: should check first if new order is match or not before adding it
+        if order.isBuy 
+        {    
+            buyOrders.push(order)
         }
-
-        if order.quantity < 0
+        else
         {
-            sellOrders.enqueue(order)
+            sellOrders.push(order)
         }
         
+        // TODO: only new orders will trigger a trade, so should check first if
+        // new order trigger a trade, and if not, just add and abort
         while !buyOrders.isEmpty && !sellOrders.isEmpty
         {
             let buy = buyOrders.peek()!
@@ -51,23 +35,23 @@ class OrderBook
             let quantity = min(buy.remainingQuantity, sell.remainingQuantity)
             let price = buy.generation < sell.generation ? buy.price : sell.price
 
-            let trade = Trade(buyer: buy.participant,
+            trades.append(Trade(buyer: buy.participant,
                               seller: sell.participant,
                               instrument: buy.instrument,
                               quantity: quantity,
                               price: price)
-                        
-            trades.append(trade)
-
-            buy.fill(amount:quantity)
-            sell.fill(amount:quantity)
-
-            if buy.remainingQuantity == 0 {
-                let _ = buyOrders.dequeue()
+            )                        
+            
+            if buy.remainingQuantity == quantity {
+                let _ = buyOrders.pop()
+            } else {
+               buy.fill(amount:quantity) 
             }
 
-            if sell.remainingQuantity == 0 {
-                let _ = sellOrders.dequeue()
+            if sell.remainingQuantity == quantity {
+                let _ = sellOrders.pop()
+            } else {
+               sell.fill(amount:quantity) 
             }
         }
         

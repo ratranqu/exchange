@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Order: Comparable
+public class Order: Comparable
 {
     var participant: String
     var instrument: String
@@ -19,21 +19,30 @@ public struct Order: Comparable
         self.quantity = quantity
         self.isBuy = quantity > 0
         self.price = price
-        self.remainingQuantity = quantity
+        self.remainingQuantity = abs(quantity)
         self.generation = Order.allocateGeneration()
     }
 
-    public static func < (lhs: Self, rhs: Self) -> Bool {
+    public static func < (lhs: Order, rhs: Order) -> Bool {
         precondition(lhs.isBuy == rhs.isBuy)
         
         if rhs.price == lhs.price {
-            return lhs.generation < rhs.generation;
+            return lhs.isBuy ? lhs.generation < rhs.generation : rhs.generation < lhs.generation;
         }
         
         return rhs.price < lhs.price
     }
+
+
+    public static func == (lhs: Order, rhs: Order) -> Bool {
+        
+        return rhs.price == lhs.price 
+            && rhs.participant == lhs.participant
+            && rhs.instrument == lhs.instrument
+            && rhs.quantity == lhs.quantity
+    }    
     
-     public init?(fromString string: String) throws
+     convenience public init?(fromString string: String) throws
      {
          // <buyer/sellerid>:<instrument>:<signed quantity>:<limit price>
          // eg. A:AUDUSD:100:1.47
@@ -45,26 +54,24 @@ public struct Order: Comparable
              return nil
          }
 
-         guard let parsedQuantity = Int(elements[2]) else
+         guard let parsedQuantity = Int(elements[2].trimmingCharacters(in: .whitespacesAndNewlines)) else
          {
              throw OrderError.InvalidQuantity(elements[2])
          }
         
-         guard let parsedPrice = Double(elements[3]) else
+         guard let parsedPrice = Double(elements[3].trimmingCharacters(in: .whitespacesAndNewlines)) else
          {
              throw OrderError.InvalidPrice(elements[3])
          }
 
-         participant = elements[0]
-         instrument = elements[1]
-         quantity = parsedQuantity
-         isBuy = quantity > 0
-         remainingQuantity = abs(quantity)
-         price = parsedPrice
-         generation = Order.allocateGeneration()
+        self.init(participant: elements[0].trimmingCharacters(in: .whitespacesAndNewlines),
+                  instrument: elements[1].trimmingCharacters(in: .whitespacesAndNewlines),
+                  quantity: parsedQuantity, 
+                  price: parsedPrice
+        )
      }
     
-    public mutating func fill(amount: Int) {
+    public func fill(amount: Int) {
         remainingQuantity -= amount;
     }
   

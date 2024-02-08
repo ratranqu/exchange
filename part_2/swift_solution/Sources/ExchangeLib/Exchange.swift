@@ -10,7 +10,7 @@ public class Exchange
 
     public func insert(order: Order) -> [Trade]
     {
-        var orderBook = orderBooks[order.instrument]
+        var orderBook = orderBooks[order.instrument] 
 
         if orderBook == nil
         {

@@ -21,8 +21,8 @@ class OrderTests : XCTestCase
     func testInvalidInit() throws
     {
         XCTAssertNil(try Order(fromString: "blah"))
-        XCTAssertNil(try Order(fromString: "A:B:C:D"))
-        XCTAssertNil(try Order(fromString: "A:B:1.2345:1.0"))
+        XCTAssertThrowsError(try Order(fromString: "A:B:C:D"))
+        XCTAssertThrowsError(try Order(fromString: "A:B:1.2345:1.0"))
     }
 
     func testWhitespaceInit() throws
