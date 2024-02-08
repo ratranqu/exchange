@@ -1,18 +1,36 @@
 
-import SwiftPriorityQueue
-
 class OrderBook
 {
-    var buyOrders: PriorityQueue<Order> = PriorityQueue<Order>(ascending: true)
+    var buyOrders: PriorityQueue<Order> = PriorityQueue<Order>(sort: { (lhs, rhs) -> Bool in
+       
+        assert(lhs.quantity >= 0)
+        assert(lhs.quantity >= 0)
+        
+        if rhs.price == lhs.price {
+            return lhs.generation < rhs.generation;
+        }
+        
+        return rhs.price < lhs.price
+    })
     
-    var sellOrders: PriorityQueue<Order> = PriorityQueue<Order>(ascending: false)
-    
+    var sellOrders: PriorityQueue<Order> = PriorityQueue<Order>(sort: { (lhs, rhs) -> Bool in
+        
+        assert(lhs.quantity < 0)
+        assert(rhs.quantity < 0)
+        
+        if lhs.price == rhs.price {
+            return lhs.generation < rhs.generation
+        }
+        
+        return lhs.price < rhs.price
+    })
+
+
     public func execute(order: Order) -> [Trade]
     {
         var trades : [Trade] = []
 
-        // TODO: should check first if new order is match or not before adding it
-        if order.isBuy 
+        if order.isBuy
         {    
             buyOrders.push(order)
         }
@@ -21,8 +39,6 @@ class OrderBook
             sellOrders.push(order)
         }
         
-        // TODO: only new orders will trigger a trade, so should check first if
-        // new order trigger a trade, and if not, just add and abort
         while !buyOrders.isEmpty && !sellOrders.isEmpty
         {
             let buy = buyOrders.peek()!
