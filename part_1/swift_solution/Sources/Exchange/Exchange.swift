@@ -12,7 +12,7 @@ import Darwin
 struct Exchange: ParsableCommand {
 
     @Argument(help: "The path of the order file.")
-    var orderFilepath: String = "test"
+    var orderFilepath: String?
 
     mutating func run() throws {
         let exchange = ExchangeLib.Exchange()
@@ -27,17 +27,26 @@ struct Exchange: ParsableCommand {
             Double.parser()
         }
 
-        guard let file = freopen(orderFilepath, "r", stdin) else {
-            fatalError("File at \(orderFilepath) not found.")
-        }
-        defer {
-            fclose(file)
-        }
+        if let orderFilepath { 
+            guard let file = freopen(orderFilepath, "r", stdin) else {
+                fatalError("File at \(orderFilepath) not found.")
+            }
+            defer {
+                fclose(file)
+            }
 
-        while let line = readLine()
-        {
-            if let o = try? order.parse(line) {
-                exchange.insert(order: o)
+            while let line = readLine()
+            {
+                if let o = try? order.parse(line) {
+                    exchange.insert(order: o)
+                }
+            }
+        } else {
+            while let line = readLine()
+            {
+                if let o = try? order.parse(line) {
+                    exchange.insert(order: o)
+                }
             }
         }
         
