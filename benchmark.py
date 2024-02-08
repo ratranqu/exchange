@@ -2,7 +2,6 @@
 
 import sys
 import os
-import subprocess
 import timeit
 import gzip
 import shutil
@@ -89,7 +88,6 @@ for input in input_files:
         except Exception as ex:
             print(str(ex))
             continue
-    subprocess.run(["cat", output_file])
 
 def human_format(num):
     magnitude = 0
