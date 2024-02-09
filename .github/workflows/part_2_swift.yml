@@ -23,7 +23,7 @@ jobs:
     - name: build
       working-directory: './part_2/swift_solution'
       run: |
-        swift build  -c release -xswiftc -Ounchecked
+        swift build -c release -xswiftc -Ounchecked
         cp .build/release/Exchange .
     - name: upload Exchange
       uses: actions/upload-artifact@v4
