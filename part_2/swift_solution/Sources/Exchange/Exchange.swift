@@ -17,13 +17,13 @@ struct Exchange: ParsableCommand {
     mutating func run() throws {
         let exchange = ExchangeLib.Exchange()
 
-        let order = Parse(input: Substring.self, Order.init(participant:instrument:quantity:price:)) {
-            Prefix { $0 != ":" }.map(String.init)
-            ":"
-            Prefix { $0 != ":" }.map(String.init)
-            ":"
+        let order = Parse(input: Substring.UTF8View.self, Order.init(participant:instrument:quantity:price:)) {
+            Prefix { $0 != UInt8(ascii: ":") }.map { String(Substring($0)) }
+            ":".utf8
+            Prefix { $0 != UInt8(ascii: ":") }.map { String(Substring($0)) }
+            ":".utf8
             Int.parser()
-            ":"
+            ":".utf8
             Double.parser()
         }
 
@@ -38,6 +38,7 @@ struct Exchange: ParsableCommand {
             while let line = readLine()
             {
                 if let o = try? order.parse(line) {
+//                if let o = try? Order(fromString: line) {
                     for trade in exchange.insert(order: o) {
                         print(trade.toString())
                     }
