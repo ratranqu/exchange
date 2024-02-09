@@ -131,8 +131,10 @@ public struct Heap<T> {
     } else {
       // Use the last node to replace the first one, then fix the heap by
       // shifting this new first node into its proper position.
-      let value = nodes[0]
-      nodes[0] = nodes.removeLast()
+        let value = nodes.first
+        let n = nodes.removeLast()
+        nodes.withUnsafeMutableBufferPointer { $0[0] = n }
+      //nodes[0] = nodes.removeLast()
       shiftDown(0)
       return value
     }
@@ -160,11 +162,12 @@ public struct Heap<T> {
    */
   internal mutating func shiftUp(_ index: Int) {
     var childIndex = index
-    let child = nodes[childIndex]
+      let child = nodes.withUnsafeBufferPointer { $0[childIndex] }
     var parentIndex = self.parentIndex(ofIndex: childIndex)
     
-    while childIndex > 0 && orderCriteria(child, nodes[parentIndex]) {
-      nodes[childIndex] = nodes[parentIndex]
+      while childIndex > 0 && orderCriteria(child, nodes.withUnsafeBufferPointer { $0[parentIndex] }) {
+          let n = nodes.withUnsafeBufferPointer { $0[parentIndex] }
+          nodes.withUnsafeMutableBufferPointer { $0[childIndex] = n}
       childIndex = parentIndex
       parentIndex = self.parentIndex(ofIndex: childIndex)
     }
@@ -185,10 +188,11 @@ public struct Heap<T> {
     // first, we're done. If not, that element is out-of-place and we make
     // it "float down" the tree until the heap property is restored.
     var first = index
-    if leftChildIndex < endIndex && orderCriteria(nodes[leftChildIndex], nodes[first]) {
+    let firstValue = nodes.withUnsafeBufferPointer { $0[first] }
+    if leftChildIndex < endIndex && orderCriteria(nodes.withUnsafeBufferPointer { $0[leftChildIndex] }, firstValue) {
       first = leftChildIndex
     }
-    if rightChildIndex < endIndex && orderCriteria(nodes[rightChildIndex], nodes[first]) {
+    if rightChildIndex < endIndex && orderCriteria(nodes.withUnsafeBufferPointer { $0[rightChildIndex] }, firstValue) {
       first = rightChildIndex
     }
     if first == index { return }
