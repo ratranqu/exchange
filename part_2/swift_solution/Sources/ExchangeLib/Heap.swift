@@ -188,11 +188,10 @@ public struct Heap<T> {
     // first, we're done. If not, that element is out-of-place and we make
     // it "float down" the tree until the heap property is restored.
     var first = index
-    let firstValue = nodes.withUnsafeBufferPointer { $0[first] }
-    if leftChildIndex < endIndex && orderCriteria(nodes.withUnsafeBufferPointer { $0[leftChildIndex] }, firstValue) {
+      if leftChildIndex < endIndex && orderCriteria(nodes.withUnsafeBufferPointer { $0[leftChildIndex] }, nodes.withUnsafeBufferPointer { $0[first] }) {
       first = leftChildIndex
     }
-    if rightChildIndex < endIndex && orderCriteria(nodes.withUnsafeBufferPointer { $0[rightChildIndex] }, firstValue) {
+      if rightChildIndex < endIndex && orderCriteria(nodes.withUnsafeBufferPointer { $0[rightChildIndex] }, nodes.withUnsafeBufferPointer { $0[first] }) {
       first = rightChildIndex
     }
     if first == index { return }
