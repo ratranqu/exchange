@@ -1,5 +1,57 @@
 import Foundation
 
+public struct Buy: Comparable {
+
+    public let participant: String
+    public let instrument: String
+    public var quantity: Int
+    public let price: Double
+    public let generation: Int
+
+    public init(participant: String, instrument: String, quantity: Int, price: Double, generation: Int = Generator.next) {
+        self.participant = participant
+        self.instrument = instrument
+        self.quantity = quantity
+        self.price = price
+        self.generation = generation
+    }
+
+    public static func < (lhs: borrowing Buy, rhs: borrowing Buy) -> Bool {
+        lhs.price > rhs.price || (lhs.price == rhs.price && lhs.generation < rhs.generation)
+    }
+}
+
+
+public struct Sell: Comparable {
+    public let participant: String
+    public let instrument: String
+    public var quantity: Int
+    public let price: Double
+    public let generation: Int
+
+    public init(participant: String, instrument: String, quantity: Int, price: Double, generation: Int = Generator.next) {
+        self.participant = participant
+        self.instrument = instrument
+        self.quantity = quantity
+        self.price = price
+        self.generation = generation
+    }
+
+    public static func < (lhs: borrowing Sell, rhs: borrowing Sell) -> Bool {
+        lhs.price < rhs.price || (lhs.price == rhs.price && lhs.generation < rhs.generation)
+    }
+}
+
+public struct Generator {
+    private static var _next: Int = 0
+
+    public static var next: Int  {
+        _next = _next + 1
+        return _next
+    }
+}
+
+
 public class Order: Comparable
 {
     var participant: String
@@ -39,8 +91,9 @@ public class Order: Comparable
         return rhs.price == lhs.price 
             && rhs.participant == lhs.participant
             && rhs.instrument == lhs.instrument
-            && rhs.quantity == lhs.quantity
-    }    
+            && rhs.remainingQuantity == lhs.remainingQuantity
+        && rhs.isBuy == lhs.isBuy
+    }
     
      convenience public init?(fromString string: String) throws
      {

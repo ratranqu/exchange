@@ -17,7 +17,7 @@ public struct PriorityQueue<T> {
     To create a max-priority queue, supply a > sort function. For a min-priority
     queue, use <.
   */
-  public init(sort: @escaping (T, T) -> Bool) {
+    public init(sort: @escaping (T, T) -> Bool) {
     heap = Heap(sort: sort)
   }
 

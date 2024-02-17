@@ -17,13 +17,13 @@ struct Exchange: ParsableCommand {
     mutating func run() throws {
         let exchange = ExchangeLib.Exchange()
 
-        let order = Parse(input: Substring.UTF8View.self, Order.init(participant:instrument:quantity:price:)) {
-            Prefix { $0 != UInt8(ascii: ":") }.map { String(Substring($0)) }
-            ":".utf8
-            Prefix { $0 != UInt8(ascii: ":") }.map { String(Substring($0)) }
-            ":".utf8
+        let order  = Parse(input: ArraySlice<UInt8>.self) {
+            Prefix { $0 != UInt8(ascii: ":") }.map { String(bytes: $0, encoding: .utf8) }
+            StartsWith(":".utf8)
+            Prefix { $0 != UInt8(ascii: ":") }.map { String(bytes: $0, encoding: .utf8) }
+            StartsWith(":".utf8)
             Int.parser()
-            ":".utf8
+            StartsWith(":".utf8)
             Double.parser()
         }
 
@@ -35,24 +35,36 @@ struct Exchange: ParsableCommand {
                 fclose(file)
             }
 
-            while let line = readLine()
+
+            while let line = readLine().map({ ArraySlice($0.utf8) })
             {
                 if let o = try? order.parse(line) {
-//                if let o = try? Order(fromString: line) {
-                    for trade in exchange.insert(order: o) {
-                        print(trade.toString())
+                    if o.2 > 0 {
+                        for trade in exchange.insert(order: Buy(participant: o.0 ?? "P", instrument: o.1 ?? "I", quantity: o.2, price: o.3)) {
+                            print(trade.toString())
+                        }
+                    } else {
+                        for trade in exchange.insert(order: Sell(participant: o.0 ?? "P", instrument: o.1 ?? "I", quantity: -o.2, price: o.3)) {
+                            print(trade.toString())
+                        }  
                     }
                 }
             }
         } else {
-            while let line = readLine()
+            while let line = readLine().map({ ArraySlice($0.utf8) })
             {
                 if let o = try? order.parse(line) {
-                    for trade in exchange.insert(order: o) {
-                        print(trade.toString())
+                    if o.2 > 0 {
+                        for trade in exchange.insert(order: Buy(participant: o.0 ?? "P", instrument: o.1 ?? "I", quantity: o.2, price: o.3)) {
+                            print(trade.toString())
+                        }
+                    } else {
+                        for trade in exchange.insert(order: Sell(participant: o.0 ?? "P", instrument: o.1 ?? "I", quantity: -o.2, price: o.3)) {
+                            print(trade.toString())
+                        }
                     }
                 }
-            }            
+            }
         }
     }
 }
