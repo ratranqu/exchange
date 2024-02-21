@@ -13,7 +13,7 @@ class ExchangeTests : XCTestCase
     func testInsert() throws
     {
         let exchange = Exchange()
-        let trades = exchange.insert(order: Buy(participant: "A",instrument: "AUDUSD",quantity: 100,price: 1.47))
+        let trades = exchange.insert(instrument: "AUDUSD", order: Buy(participant: "A",quantity: 100,price: 1.47))
         XCTAssertEqual(trades.count, 0)
         XCTAssertEqual(exchange.orderBooks.count, 1)
     }
@@ -22,9 +22,9 @@ class ExchangeTests : XCTestCase
     {
         let exchange = Exchange()
         var trades: [Trade] = []
-        trades += exchange.insert(order: Buy(participant: "A",instrument: "AUDUSD",quantity: 100,price: 1.47))
-        trades += exchange.insert(order: Buy(participant: "B",instrument: "GBPUSD",quantity: 100,price: 1.47))
-        trades += exchange.insert(order: Buy(participant: "C",instrument: "USDCAD",quantity: 100,price: 1.47))
+        trades += exchange.insert(instrument: "AUDUSD",order: Buy(participant: "A",quantity: 100,price: 1.47))
+        trades += exchange.insert(instrument: "GBPUSD",order: Buy(participant: "B",quantity: 100,price: 1.47))
+        trades += exchange.insert(instrument: "USDCAD",order: Buy(participant: "C",quantity: 100,price: 1.47))
         XCTAssertEqual(trades.count, 0)
         XCTAssertEqual(exchange.orderBooks.count, 3)
     }
@@ -33,8 +33,8 @@ class ExchangeTests : XCTestCase
     {
         let exchange = Exchange()
         var trades: [Trade] = []
-        trades += exchange.insert(order: Buy(participant: "A",instrument: "AUDUSD",quantity: 100,price: 1.47))
-        trades += exchange.insert(order: Sell(participant: "B",instrument: "AUDUSD",quantity: 100,price: 1.47))
+        trades += exchange.insert(instrument: "AUDUSD",order: Buy(participant: "A",quantity: 100,price: 1.47))
+        trades += exchange.insert(instrument: "AUDUSD",order: Sell(participant: "B",quantity: 100,price: 1.47))
         XCTAssertEqual(exchange.orderBooks.count, 1)
         XCTAssertEqual(trades.count, 1)
     }
@@ -43,8 +43,8 @@ class ExchangeTests : XCTestCase
     {
         let exchange = Exchange()
         var trades: [Trade] = []
-        trades += exchange.insert(order: Buy(participant: "A",instrument: "AUDUSD",quantity: 100,price: 1.47))
-        trades += exchange.insert(order: Sell(participant: "B",instrument: "AUDUSD",quantity: 50,price: 1.45))
+        trades += exchange.insert(instrument: "AUDUSD",order: Buy(participant: "A",quantity: 100,price: 1.47))
+        trades += exchange.insert(instrument: "AUDUSD",order: Sell(participant: "B",quantity: 50,price: 1.45))
         XCTAssertEqual(trades.count, 1)
         XCTAssertEqual(trades[0].toString(), "A:B:AUDUSD:50:1.47")
     }
@@ -55,13 +55,13 @@ class ExchangeTests : XCTestCase
 
         var trades: [Trade] = []
 
-        trades += exchange.insert(order: Buy(participant: "A",instrument: "GBPUSD",quantity: 100,price: 1.66))
-        trades += exchange.insert(order: Sell(participant: "B",instrument: "EURUSD",quantity: 100,price: 1.11))
-        trades += exchange.insert(order: Sell(participant: "F",instrument: "EURUSD",quantity: 50,price: 1.1))
-        trades += exchange.insert(order: Sell(participant: "C",instrument: "GBPUSD",quantity: 10,price: 1.5))
-        trades += exchange.insert(order: Sell(participant: "C",instrument: "GBPUSD",quantity: 20,price: 1.6))
-        trades += exchange.insert(order: Sell(participant: "C",instrument: "GBPUSD",quantity: 20,price: 1.7))
-        trades += exchange.insert(order: Buy(participant: "D",instrument: "EURUSD",quantity: 100,price: 1.11))
+        trades += exchange.insert(instrument: "GBPUSD",order: Buy(participant: "A",quantity: 100,price: 1.66))
+        trades += exchange.insert(instrument: "EURUSD",order: Sell(participant: "B",quantity: 100,price: 1.11))
+        trades += exchange.insert(instrument: "EURUSD",order: Sell(participant: "F",quantity: 50,price: 1.1))
+        trades += exchange.insert(instrument: "GBPUSD",order: Sell(participant: "C",quantity: 10,price: 1.5))
+        trades += exchange.insert(instrument: "GBPUSD",order: Sell(participant: "C",quantity: 20,price: 1.6))
+        trades += exchange.insert(instrument: "GBPUSD",order: Sell(participant: "C",quantity: 20,price: 1.7))
+        trades += exchange.insert(instrument: "EURUSD",order: Buy(participant: "D",quantity: 100,price: 1.11))
 
 
         XCTAssertEqual(trades.count, 4)

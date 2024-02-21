@@ -1,24 +1,28 @@
 class OrderBook3
 {
+    let instrument: String
     var buyOrders: PriorityQueue<Buy> = PriorityQueue<Buy>(sort: <)
 
     var sellOrders: PriorityQueue<Sell> = PriorityQueue<Sell>(sort: <)
 
+    init(for instrument: String) {
+        self.instrument = instrument
+    }
 
-    public func execute(_ order: Buy) -> [Trade]
+    public func execute(_ order: consuming Buy) -> [Trade]
     {
         var trades : [Trade] = []
 
         if sellOrders.isEmpty {
-            buyOrders.push(order)
+            buyOrders.push(consume order)
             return trades
         }
 
-        var buy = order
+        var buy = consume order
         var sell = sellOrders.peek()!
         if buy.price < sell.price {
             // if no cross, we can return
-            buyOrders.push(order)
+            buyOrders.push(buy)
             return trades
         }
         let _ = sellOrders.pop()! // we are now certain the quantity will change because the prices will cross
@@ -30,7 +34,7 @@ class OrderBook3
 
             trades.append(Trade(buyer: buy.participant,
                                 seller: sell.participant,
-                                instrument: buy.instrument,
+                                instrument: instrument,
                                 quantity: quantity,
                                 price: price)
             )
@@ -66,7 +70,7 @@ class OrderBook3
         return trades
     }
 
-    public func execute(_ order: Sell) -> [Trade]
+    public func execute(_ order: consuming Sell) -> [Trade]
     {
         var trades : [Trade] = []
 
@@ -76,9 +80,9 @@ class OrderBook3
         }
 
         var buy = buyOrders.peek()!
-        var sell = order
+        var sell = consume order
         if buy.price < sell.price {
-            sellOrders.push(order)
+            sellOrders.push(sell)
             return trades
         }
 
@@ -92,7 +96,7 @@ class OrderBook3
 
             trades.append(Trade(buyer: buy.participant,
                                 seller: sell.participant,
-                                instrument: buy.instrument,
+                                instrument: instrument,
                                 quantity: quantity,
                                 price: price)
             )

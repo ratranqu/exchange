@@ -93,8 +93,8 @@ public struct Heap<T> {
    * Adds a new value to the heap. This reorders the heap so that the max-heap
    * or min-heap property still holds. Performance: O(log n).
    */
-  public mutating func insert(_ value: T) {
-    nodes.append(value)
+  public mutating func insert(_ value: consuming T) {
+    nodes.append(consume value)
     shiftUp(nodes.count - 1)
   }
   
@@ -112,7 +112,7 @@ public struct Heap<T> {
    * Allows you to change an element. This reorders the heap so that
    * the max-heap or min-heap property still holds.
    */
-  public mutating func replace(index i: Int, value: T) {
+  public mutating func replace(index i: Int, value: consuming T) {
     guard i < nodes.count else { return }
     
     remove(at: i)

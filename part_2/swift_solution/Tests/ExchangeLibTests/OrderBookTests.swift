@@ -5,7 +5,7 @@ class OrderBookTests : XCTestCase
 {
     func testInit()
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AAPL")
 
         XCTAssertEqual(orderBook.buyOrders.count, 0)
         XCTAssertEqual(orderBook.buyOrders.count, 0)
@@ -13,9 +13,9 @@ class OrderBookTests : XCTestCase
 
     func testInsertBid() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
-        let trades = orderBook.execute(Buy(participant: "A", instrument: "AUDUSD", quantity: 100, price: 1.47))
+        let trades = orderBook.execute(Buy(participant: "A", quantity: 100, price: 1.47))
 
         XCTAssertEqual(orderBook.buyOrders.count, 1)
         XCTAssertEqual(orderBook.sellOrders.count, 0)
@@ -23,16 +23,16 @@ class OrderBookTests : XCTestCase
 
         let one = orderBook.buyOrders.pop()!
         XCTAssertEqual(one.participant, "A")
-        XCTAssertEqual(one.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(one.quantity, 100)
         XCTAssertEqual(one.price, 1.47)
     }
 
     func testInsertAsk() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
-        let trades = orderBook.execute(Sell(participant: "B", instrument: "AUDUSD", quantity: 100, price: 1.47))
+        let trades = orderBook.execute(Sell(participant: "B", quantity: 100, price: 1.47))
 
         XCTAssertEqual(orderBook.buyOrders.count, 0)
         XCTAssertEqual(orderBook.sellOrders.count, 1)
@@ -40,19 +40,19 @@ class OrderBookTests : XCTestCase
 
         let two = orderBook.sellOrders.pop()!
         XCTAssertEqual(two.participant, "B")
-        XCTAssertEqual(two.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(two.quantity, 100)
         XCTAssertEqual(two.price, 1.47)
     }
 
     func testInsertBidsAtDifferentPricesAsc() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Buy(participant: "A", instrument: "AUDUSD", quantity: 100, price: 1.47))
-        trades += orderBook.execute(Buy(participant: "B", instrument: "AUDUSD", quantity: 200, price: 1.48))
-        trades += orderBook.execute(Buy(participant: "C", instrument: "AUDUSD", quantity: 300, price: 1.49))
+        trades += orderBook.execute(Buy(participant: "A", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Buy(participant: "B", quantity: 200, price: 1.48))
+        trades += orderBook.execute(Buy(participant: "C", quantity: 300, price: 1.49))
 
         XCTAssertEqual(orderBook.buyOrders.count, 3)
         XCTAssertEqual(orderBook.sellOrders.count, 0)
@@ -60,31 +60,31 @@ class OrderBookTests : XCTestCase
 
         let one = orderBook.buyOrders.pop()!
         XCTAssertEqual(one.participant, "C")
-        XCTAssertEqual(one.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(one.quantity, 300)
         XCTAssertEqual(one.price, 1.49)
 
         let two = orderBook.buyOrders.pop()!
         XCTAssertEqual(two.participant, "B")
-        XCTAssertEqual(two.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(two.quantity, 200)
         XCTAssertEqual(two.price, 1.48)
 
         let three = orderBook.buyOrders.pop()!
         XCTAssertEqual(three.participant, "A")
-        XCTAssertEqual(three.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(three.quantity, 100)
         XCTAssertEqual(three.price, 1.47)
     }
 
     func testInsertBidsAtDifferentPricesDesc() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Buy(participant: "C", instrument: "AUDUSD", quantity: 100, price: 1.49))
-        trades += orderBook.execute(Buy(participant: "B", instrument: "AUDUSD", quantity: 100, price: 1.48))
-        trades += orderBook.execute(Buy(participant: "A", instrument: "AUDUSD", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Buy(participant: "C", quantity: 100, price: 1.49))
+        trades += orderBook.execute(Buy(participant: "B", quantity: 100, price: 1.48))
+        trades += orderBook.execute(Buy(participant: "A", quantity: 100, price: 1.47))
 
         XCTAssertEqual(orderBook.buyOrders.count, 3)
         XCTAssertEqual(orderBook.sellOrders.count, 0)
@@ -92,34 +92,34 @@ class OrderBookTests : XCTestCase
 
         let one = orderBook.buyOrders.pop()!
         XCTAssertEqual(one.participant, "C")
-        XCTAssertEqual(one.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(one.quantity, 100)
         XCTAssertEqual(one.price, 1.49)
 
         let two = orderBook.buyOrders.pop()!
         XCTAssertEqual(two.participant, "B")
-        XCTAssertEqual(two.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(two.quantity, 100)
         XCTAssertEqual(two.price, 1.48)
 
         let three = orderBook.buyOrders.pop()!
         XCTAssertEqual(three.participant, "A")
-        XCTAssertEqual(three.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(three.quantity, 100)
         XCTAssertEqual(three.price, 1.47)
     }
 
     func testInsertBidsAtDifferentPricesUnordered() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Buy(participant: "A", instrument: "AUDUSD", quantity: 100, price: 5))
-        trades += orderBook.execute(Buy(participant: "B", instrument: "AUDUSD", quantity: 100, price: 3))
-        trades += orderBook.execute(Buy(participant: "C", instrument: "AUDUSD", quantity: 100, price: 4))
-        trades += orderBook.execute(Buy(participant: "E", instrument: "AUDUSD", quantity: 100, price: 1))
-        trades += orderBook.execute(Buy(participant: "F", instrument: "AUDUSD", quantity: 100, price: 6))
-        trades += orderBook.execute(Buy(participant: "G", instrument: "AUDUSD", quantity: 100, price: 2))
+        trades += orderBook.execute(Buy(participant: "A", quantity: 100, price: 5))
+        trades += orderBook.execute(Buy(participant: "B", quantity: 100, price: 3))
+        trades += orderBook.execute(Buy(participant: "C", quantity: 100, price: 4))
+        trades += orderBook.execute(Buy(participant: "E", quantity: 100, price: 1))
+        trades += orderBook.execute(Buy(participant: "F", quantity: 100, price: 6))
+        trades += orderBook.execute(Buy(participant: "G", quantity: 100, price: 2))
 
         XCTAssertEqual(orderBook.buyOrders.count, 6)
         XCTAssertEqual(orderBook.sellOrders.count, 0)
@@ -143,12 +143,12 @@ class OrderBookTests : XCTestCase
 
     func testInsertAsksAtDifferentPricesAsc() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Sell(participant: "A", instrument: "AUDUSD", quantity: 100, price: 1.49))
-        trades += orderBook.execute(Sell(participant: "B", instrument: "AUDUSD", quantity: 200, price: 1.48))
-        trades += orderBook.execute(Sell(participant: "C", instrument: "AUDUSD", quantity: 300, price: 1.47))
+        trades += orderBook.execute(Sell(participant: "A", quantity: 100, price: 1.49))
+        trades += orderBook.execute(Sell(participant: "B", quantity: 200, price: 1.48))
+        trades += orderBook.execute(Sell(participant: "C", quantity: 300, price: 1.47))
 
         XCTAssertEqual(orderBook.buyOrders.count, 0)
         XCTAssertEqual(orderBook.sellOrders.count, 3)
@@ -156,19 +156,19 @@ class OrderBookTests : XCTestCase
 
         let one = orderBook.sellOrders.pop()!
         XCTAssertEqual(one.participant, "C")
-        XCTAssertEqual(one.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(one.quantity, 300)
         XCTAssertEqual(one.price, 1.47)
 
         let two = orderBook.sellOrders.pop()!
         XCTAssertEqual(two.participant, "B")
-        XCTAssertEqual(two.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(two.quantity, 200)
         XCTAssertEqual(two.price, 1.48)
 
         let three = orderBook.sellOrders.pop()!
         XCTAssertEqual(three.participant, "A")
-        XCTAssertEqual(three.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(three.quantity, 100)
         XCTAssertEqual(three.price, 1.49)
     }
@@ -176,12 +176,12 @@ class OrderBookTests : XCTestCase
 
     func testInsertAsksAtDifferentPricesDesc() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Sell(participant: "C", instrument: "AUDUSD", quantity: 100, price: 1.47))
-        trades += orderBook.execute(Sell(participant: "B", instrument: "AUDUSD", quantity: 100, price: 1.48))
-        trades += orderBook.execute(Sell(participant: "A", instrument: "AUDUSD", quantity: 100, price: 1.49))
+        trades += orderBook.execute(Sell(participant: "C", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Sell(participant: "B", quantity: 100, price: 1.48))
+        trades += orderBook.execute(Sell(participant: "A", quantity: 100, price: 1.49))
 
         XCTAssertEqual(orderBook.buyOrders.count, 0)
         XCTAssertEqual(orderBook.sellOrders.count, 3)
@@ -189,34 +189,34 @@ class OrderBookTests : XCTestCase
 
         let one = orderBook.sellOrders.pop()!
         XCTAssertEqual(one.participant, "C")
-        XCTAssertEqual(one.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(one.quantity, 100)
         XCTAssertEqual(one.price, 1.47)
 
         let two = orderBook.sellOrders.pop()!
         XCTAssertEqual(two.participant, "B")
-        XCTAssertEqual(two.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(two.quantity, 100)
         XCTAssertEqual(two.price, 1.48)
 
         let three = orderBook.sellOrders.pop()!
         XCTAssertEqual(three.participant, "A")
-        XCTAssertEqual(three.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(three.quantity, 100)
         XCTAssertEqual(three.price, 1.49)
     }
 
     func testInsertAsksAtDifferentPricesUnordered() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Sell(participant: "A", instrument: "AUDUSD", quantity: 100, price: 5))
-        trades += orderBook.execute(Sell(participant: "B", instrument: "AUDUSD", quantity: 100, price: 3))
-        trades += orderBook.execute(Sell(participant: "C", instrument: "AUDUSD", quantity: 100, price: 4))
-        trades += orderBook.execute(Sell(participant: "E", instrument: "AUDUSD", quantity: 100, price: 1))
-        trades += orderBook.execute(Sell(participant: "F", instrument: "AUDUSD", quantity: 100, price: 6))
-        trades += orderBook.execute(Sell(participant: "G", instrument: "AUDUSD", quantity: 100, price: 2))
+        trades += orderBook.execute(Sell(participant: "A", quantity: 100, price: 5))
+        trades += orderBook.execute(Sell(participant: "B", quantity: 100, price: 3))
+        trades += orderBook.execute(Sell(participant: "C", quantity: 100, price: 4))
+        trades += orderBook.execute(Sell(participant: "E", quantity: 100, price: 1))
+        trades += orderBook.execute(Sell(participant: "F", quantity: 100, price: 6))
+        trades += orderBook.execute(Sell(participant: "G", quantity: 100, price: 2))
 
         XCTAssertEqual(orderBook.buyOrders.count, 0)
         XCTAssertEqual(orderBook.sellOrders.count, 6)
@@ -239,43 +239,43 @@ class OrderBookTests : XCTestCase
 
     func testInsertBidsAtTheSamePrice() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Buy(participant: "A", instrument: "AUDUSD", quantity: 100, price: 1.47))
-        trades += orderBook.execute(Buy(participant: "B", instrument: "AUDUSD", quantity: 200, price: 1.47))
-        trades += orderBook.execute(Buy(participant: "C", instrument: "AUDUSD", quantity: 300, price: 1.47))
+        trades += orderBook.execute(Buy(participant: "A", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Buy(participant: "B", quantity: 200, price: 1.47))
+        trades += orderBook.execute(Buy(participant: "C", quantity: 300, price: 1.47))
         XCTAssertEqual(orderBook.buyOrders.count, 3)
         XCTAssertEqual(orderBook.sellOrders.count, 0)
         XCTAssertEqual(trades.count, 0)
 
         let one = orderBook.buyOrders.pop()!
         XCTAssertEqual(one.participant, "A")
-        XCTAssertEqual(one.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(one.quantity, 100)
         XCTAssertEqual(one.price, 1.47)
 
         let two = orderBook.buyOrders.pop()!
         XCTAssertEqual(two.participant, "B")
-        XCTAssertEqual(two.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(two.quantity, 200)
         XCTAssertEqual(two.price, 1.47)
 
         let three = orderBook.buyOrders.pop()!
         XCTAssertEqual(three.participant, "C")
-        XCTAssertEqual(three.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(three.quantity, 300)
         XCTAssertEqual(three.price, 1.47)
     }
 
     func testInsertAsksAtTheSamePrice() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Sell(participant: "A", instrument: "AUDUSD", quantity: 100, price: 1.47))
-        trades += orderBook.execute(Sell(participant: "B", instrument: "AUDUSD", quantity: 200, price: 1.47))
-        trades += orderBook.execute(Sell(participant: "C", instrument: "AUDUSD", quantity: 300, price: 1.47))
+        trades += orderBook.execute(Sell(participant: "A", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Sell(participant: "B", quantity: 200, price: 1.47))
+        trades += orderBook.execute(Sell(participant: "C", quantity: 300, price: 1.47))
 
         XCTAssertEqual(orderBook.buyOrders.count, 0)
         XCTAssertEqual(orderBook.sellOrders.count, 3)
@@ -283,30 +283,30 @@ class OrderBookTests : XCTestCase
 
         let one = orderBook.sellOrders.pop()!
         XCTAssertEqual(one.participant, "A")
-        XCTAssertEqual(one.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(one.quantity, 100)
         XCTAssertEqual(one.price, 1.47)
 
         let two = orderBook.sellOrders.pop()!
         XCTAssertEqual(two.participant, "B")
-        XCTAssertEqual(two.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(two.quantity, 200)
         XCTAssertEqual(two.price, 1.47)
 
         let three = orderBook.sellOrders.pop()!
         XCTAssertEqual(three.participant, "C")
-        XCTAssertEqual(three.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(three.quantity, 300)
         XCTAssertEqual(three.price, 1.47)
     }
 
     func testMatchNothing() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Buy(participant: "A", instrument: "AUDUSD", quantity: 100, price: 1.47))
-        trades += orderBook.execute(Sell(participant: "B", instrument: "AUDUSD", quantity: 100, price: 1.48))
+        trades += orderBook.execute(Buy(participant: "A", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Sell(participant: "B", quantity: 100, price: 1.48))
 
         XCTAssertEqual(orderBook.buyOrders.count, 1)
         XCTAssertEqual(orderBook.sellOrders.count, 1)
@@ -314,24 +314,24 @@ class OrderBookTests : XCTestCase
 
         let buy = orderBook.buyOrders.pop()!
         XCTAssertEqual(buy.participant, "A")
-        XCTAssertEqual(buy.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(buy.quantity, 100)
         XCTAssertEqual(buy.price, 1.47)
 
         let sell = orderBook.sellOrders.pop()!
         XCTAssertEqual(sell.participant, "B")
-        XCTAssertEqual(sell.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(sell.quantity, 100)
         XCTAssertEqual(sell.price, 1.48)
     }
 
     func testMatchBidExactly() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Buy(participant: "A", instrument: "AUDUSD", quantity: 100, price: 1.47))
-        trades += orderBook.execute(Sell(participant: "B", instrument: "AUDUSD", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Buy(participant: "A", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Sell(participant: "B", quantity: 100, price: 1.47))
         XCTAssertEqual(orderBook.buyOrders.count, 0)
         XCTAssertEqual(orderBook.sellOrders.count, 0)
         XCTAssertEqual(trades.count, 1)
@@ -345,11 +345,11 @@ class OrderBookTests : XCTestCase
 
     func testMatchAskExactly() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Sell(participant: "A", instrument: "AUDUSD", quantity: 100, price: 1.47))
-        trades += orderBook.execute(Buy(participant: "B", instrument: "AUDUSD", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Sell(participant: "A", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Buy(participant: "B", quantity: 100, price: 1.47))
 
         XCTAssertEqual(orderBook.buyOrders.count, 0)
         XCTAssertEqual(orderBook.sellOrders.count, 0)
@@ -364,11 +364,11 @@ class OrderBookTests : XCTestCase
 
     func testMatchBidPartial() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Buy(participant: "A", instrument: "AUDUSD", quantity: 250, price: 1.47))
-        trades += orderBook.execute(Sell(participant: "B", instrument: "AUDUSD", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Buy(participant: "A", quantity: 250, price: 1.47))
+        trades += orderBook.execute(Sell(participant: "B", quantity: 100, price: 1.47))
         XCTAssertEqual(orderBook.buyOrders.count, 1)
         XCTAssertEqual(orderBook.sellOrders.count, 0)
         XCTAssertEqual(trades.count, 1)
@@ -381,18 +381,18 @@ class OrderBookTests : XCTestCase
 
         let buy = orderBook.buyOrders.pop()!
         XCTAssertEqual(buy.participant, "A")
-        XCTAssertEqual(buy.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(buy.quantity, 150)
         XCTAssertEqual(buy.price, 1.47)
     }
 
     func testMatchAskPartial() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Sell(participant: "A", instrument: "AUDUSD", quantity: 250, price: 1.47))
-        trades += orderBook.execute(Buy(participant: "B", instrument: "AUDUSD", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Sell(participant: "A", quantity: 250, price: 1.47))
+        trades += orderBook.execute(Buy(participant: "B", quantity: 100, price: 1.47))
         XCTAssertEqual(orderBook.buyOrders.count, 0)
         XCTAssertEqual(orderBook.sellOrders.count, 1)
         XCTAssertEqual(trades.count, 1)
@@ -405,19 +405,19 @@ class OrderBookTests : XCTestCase
 
         let sell = orderBook.sellOrders.pop()!
         XCTAssertEqual(sell.participant, "A")
-        XCTAssertEqual(sell.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(sell.quantity, 150)
         XCTAssertEqual(sell.price, 1.47)
     }
 
     func testMatchBidMultiple() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Buy(participant: "A", instrument: "AUDUSD", quantity: 100, price: 1.47))
-        trades += orderBook.execute(Buy(participant: "B", instrument: "AUDUSD", quantity: 200, price: 1.46))
-        trades += orderBook.execute(Sell(participant: "C", instrument: "AUDUSD", quantity: 150, price: 1.46))
+        trades += orderBook.execute(Buy(participant: "A", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Buy(participant: "B", quantity: 200, price: 1.46))
+        trades += orderBook.execute(Sell(participant: "C", quantity: 150, price: 1.46))
 
         XCTAssertEqual(orderBook.buyOrders.count, 1)
         XCTAssertEqual(orderBook.sellOrders.count, 0)
@@ -437,19 +437,19 @@ class OrderBookTests : XCTestCase
 
         let buy = orderBook.buyOrders.pop()!
         XCTAssertEqual(buy.participant, "B")
-        XCTAssertEqual(buy.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(buy.quantity, 150)
         XCTAssertEqual(buy.price, 1.46)
     }
 
     func testMatchAskMultiple() throws
     {
-        let orderBook = OrderBook3()
+        let orderBook = OrderBook3(for: "AUDUSD")
 
         var trades : [Trade] = []
-        trades += orderBook.execute(Sell(participant: "A", instrument: "AUDUSD", quantity: 100, price: 1.47))
-        trades += orderBook.execute(Sell(participant: "B", instrument: "AUDUSD", quantity: 200, price: 1.48))
-        trades += orderBook.execute(Buy(participant: "C", instrument: "AUDUSD", quantity: 150, price: 1.48))
+        trades += orderBook.execute(Sell(participant: "A", quantity: 100, price: 1.47))
+        trades += orderBook.execute(Sell(participant: "B", quantity: 200, price: 1.48))
+        trades += orderBook.execute(Buy(participant: "C", quantity: 150, price: 1.48))
 
         XCTAssertEqual(orderBook.buyOrders.count, 0)
         XCTAssertEqual(orderBook.sellOrders.count, 1)
@@ -469,7 +469,7 @@ class OrderBookTests : XCTestCase
 
         let sell = orderBook.sellOrders.pop()!
         XCTAssertEqual(sell.participant, "B")
-        XCTAssertEqual(sell.instrument, "AUDUSD")
+        XCTAssertEqual(orderBook.instrument, "AUDUSD")
         XCTAssertEqual(sell.quantity, 150)
         XCTAssertEqual(sell.price, 1.48)
     }

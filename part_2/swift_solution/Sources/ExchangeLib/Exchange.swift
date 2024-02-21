@@ -8,29 +8,29 @@ public class Exchange
     {
     }
 
-    public func insert(order: Buy) -> [Trade]
+    public func insert(instrument: String, order: consuming Buy) -> [Trade]
     {
-        var orderBook = orderBooks[order.instrument]
+        var orderBook = orderBooks[instrument]
 
         if orderBook == nil
         {
-            orderBook = OrderBook3()
-            orderBooks[order.instrument] = orderBook
+            orderBook = OrderBook3(for: instrument)
+            orderBooks[instrument] = orderBook
         }
         
-        return orderBook!.execute(order)
+        return orderBook!.execute(consume order)
     }
 
-    public func insert(order: Sell) -> [Trade]
+    public func insert(instrument: String, order: consuming Sell) -> [Trade]
     {
-        var orderBook = orderBooks[order.instrument]
+        var orderBook = orderBooks[instrument]
 
         if orderBook == nil
         {
-            orderBook = OrderBook3()
-            orderBooks[order.instrument] = orderBook
+            orderBook = OrderBook3(for: instrument)
+            orderBooks[instrument] = orderBook
         }
 
-        return orderBook!.execute(order)
+        return orderBook!.execute(consume order)
     }
 }
