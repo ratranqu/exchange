@@ -46,7 +46,7 @@ class ExchangeTests : XCTestCase
         trades += exchange.insert(instrument: "AUDUSD",order: Buy(participant: "A",quantity: 100,price: 1.47))
         trades += exchange.insert(instrument: "AUDUSD",order: Sell(participant: "B",quantity: 50,price: 1.45))
         XCTAssertEqual(trades.count, 1)
-        XCTAssertEqual(trades[0].toString(), "A:B:AUDUSD:50:1.47")
+        XCTAssertEqual(trades[0].description, "A:B:AUDUSD:50:1.47")
     }
 
     func testScenario2() throws
@@ -65,14 +65,14 @@ class ExchangeTests : XCTestCase
 
 
         XCTAssertEqual(trades.count, 4)
-        XCTAssert(trades.contains { $0.toString() == "A:C:GBPUSD:10:1.66" })
-        XCTAssert(trades.contains { $0.toString() == "A:C:GBPUSD:20:1.66" })
-        XCTAssert(trades.contains { $0.toString() == "D:F:EURUSD:50:1.1" })
-        XCTAssert(trades.contains { $0.toString() == "D:B:EURUSD:50:1.11" })
+        XCTAssert(trades.contains { $0.description == "A:C:GBPUSD:10:1.66" })
+        XCTAssert(trades.contains { $0.description == "A:C:GBPUSD:20:1.66" })
+        XCTAssert(trades.contains { $0.description == "D:F:EURUSD:50:1.1" })
+        XCTAssert(trades.contains { $0.description == "D:B:EURUSD:50:1.11" })
 
-        XCTAssertEqual(trades[0].toString(), "A:C:GBPUSD:10:1.66")
-        XCTAssertEqual(trades[1].toString(), "A:C:GBPUSD:20:1.66")
-        XCTAssertEqual(trades[2].toString(), "D:F:EURUSD:50:1.1")
-        XCTAssertEqual(trades[3].toString(), "D:B:EURUSD:50:1.11")
+        XCTAssertEqual(trades[0].description, "A:C:GBPUSD:10:1.66")
+        XCTAssertEqual(trades[1].description, "A:C:GBPUSD:20:1.66")
+        XCTAssertEqual(trades[2].description, "D:F:EURUSD:50:1.1")
+        XCTAssertEqual(trades[3].description, "D:B:EURUSD:50:1.11")
     }
 }

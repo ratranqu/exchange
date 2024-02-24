@@ -2,35 +2,29 @@ import Foundation
 
 public class Exchange
 {
-    var orderBooks : [String : OrderBook3] = [:]
+    var orderBooks : [Instrument : OrderBook] = [:]
 
     public init()
     {
     }
 
-    public func insert(instrument: String, order: consuming Buy) -> [Trade]
+    public func insert(instrument: Instrument, order: consuming Buy) -> [Trade]
     {
-        var orderBook = orderBooks[instrument]
-
-        if orderBook == nil
+        if orderBooks[instrument] == nil
         {
-            orderBook = OrderBook3(for: instrument)
-            orderBooks[instrument] = orderBook
+            orderBooks[instrument] = OrderBook(for: instrument)
         }
         
-        return orderBook!.execute(consume order)
+        return orderBooks[instrument]!.execute(consume order)
     }
 
-    public func insert(instrument: String, order: consuming Sell) -> [Trade]
+    public func insert(instrument: Instrument, order: consuming Sell) -> [Trade]
     {
-        var orderBook = orderBooks[instrument]
-
-        if orderBook == nil
+        if orderBooks[instrument] == nil
         {
-            orderBook = OrderBook3(for: instrument)
-            orderBooks[instrument] = orderBook
+            orderBooks[instrument] = OrderBook(for: instrument)
         }
 
-        return orderBook!.execute(order)
+        return orderBooks[instrument]!.execute(consume order)
     }
 }

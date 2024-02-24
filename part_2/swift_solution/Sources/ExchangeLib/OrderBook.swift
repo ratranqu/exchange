@@ -1,11 +1,11 @@
-class OrderBook3
+class OrderBook
 {
-    let instrument: String
+    let instrument: Instrument
     var buyOrders: PriorityQueue<Buy> = PriorityQueue<Buy>(sort: <)
 
     var sellOrders: PriorityQueue<Sell> = PriorityQueue<Sell>(sort: <)
 
-    init(for instrument: String) {
+    init(for instrument: Instrument) {
         self.instrument = instrument
     }
 

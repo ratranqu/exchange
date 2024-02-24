@@ -17,7 +17,7 @@ class TradeTests : XCTestCase
     func testToString()
     {
         let trade = Trade(buyer: "A", seller: "B", instrument: "AUDUSD", quantity: 50, price: 1.47)
-        XCTAssertEqual(trade.toString(), "A:B:AUDUSD:50:1.47")
+        XCTAssertEqual(trade.description, "A:B:AUDUSD:50:1.47")
     }
 
 }

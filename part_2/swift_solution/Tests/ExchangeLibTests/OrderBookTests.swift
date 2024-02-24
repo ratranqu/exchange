@@ -5,7 +5,7 @@ class OrderBookTests : XCTestCase
 {
     func testInit()
     {
-        let orderBook = OrderBook3(for: "AAPL")
+        let orderBook = OrderBook(for: "AAPL")
 
         XCTAssertEqual(orderBook.buyOrders.count, 0)
         XCTAssertEqual(orderBook.buyOrders.count, 0)
@@ -13,7 +13,7 @@ class OrderBookTests : XCTestCase
 
     func testInsertBid() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         let trades = orderBook.execute(Buy(participant: "A", quantity: 100, price: 1.47))
 
@@ -30,7 +30,7 @@ class OrderBookTests : XCTestCase
 
     func testInsertAsk() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         let trades = orderBook.execute(Sell(participant: "B", quantity: 100, price: 1.47))
 
@@ -47,7 +47,7 @@ class OrderBookTests : XCTestCase
 
     func testInsertBidsAtDifferentPricesAsc() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Buy(participant: "A", quantity: 100, price: 1.47))
@@ -79,7 +79,7 @@ class OrderBookTests : XCTestCase
 
     func testInsertBidsAtDifferentPricesDesc() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Buy(participant: "C", quantity: 100, price: 1.49))
@@ -111,7 +111,7 @@ class OrderBookTests : XCTestCase
 
     func testInsertBidsAtDifferentPricesUnordered() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Buy(participant: "A", quantity: 100, price: 5))
@@ -143,7 +143,7 @@ class OrderBookTests : XCTestCase
 
     func testInsertAsksAtDifferentPricesAsc() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Sell(participant: "A", quantity: 100, price: 1.49))
@@ -176,7 +176,7 @@ class OrderBookTests : XCTestCase
 
     func testInsertAsksAtDifferentPricesDesc() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Sell(participant: "C", quantity: 100, price: 1.47))
@@ -208,7 +208,7 @@ class OrderBookTests : XCTestCase
 
     func testInsertAsksAtDifferentPricesUnordered() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Sell(participant: "A", quantity: 100, price: 5))
@@ -239,7 +239,7 @@ class OrderBookTests : XCTestCase
 
     func testInsertBidsAtTheSamePrice() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Buy(participant: "A", quantity: 100, price: 1.47))
@@ -270,7 +270,7 @@ class OrderBookTests : XCTestCase
 
     func testInsertAsksAtTheSamePrice() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Sell(participant: "A", quantity: 100, price: 1.47))
@@ -302,7 +302,7 @@ class OrderBookTests : XCTestCase
 
     func testMatchNothing() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Buy(participant: "A", quantity: 100, price: 1.47))
@@ -327,7 +327,7 @@ class OrderBookTests : XCTestCase
 
     func testMatchBidExactly() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Buy(participant: "A", quantity: 100, price: 1.47))
@@ -345,7 +345,7 @@ class OrderBookTests : XCTestCase
 
     func testMatchAskExactly() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Sell(participant: "A", quantity: 100, price: 1.47))
@@ -364,7 +364,7 @@ class OrderBookTests : XCTestCase
 
     func testMatchBidPartial() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Buy(participant: "A", quantity: 250, price: 1.47))
@@ -388,7 +388,7 @@ class OrderBookTests : XCTestCase
 
     func testMatchAskPartial() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Sell(participant: "A", quantity: 250, price: 1.47))
@@ -412,7 +412,7 @@ class OrderBookTests : XCTestCase
 
     func testMatchBidMultiple() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Buy(participant: "A", quantity: 100, price: 1.47))
@@ -444,7 +444,7 @@ class OrderBookTests : XCTestCase
 
     func testMatchAskMultiple() throws
     {
-        let orderBook = OrderBook3(for: "AUDUSD")
+        let orderBook = OrderBook(for: "AUDUSD")
 
         var trades : [Trade] = []
         trades += orderBook.execute(Sell(participant: "A", quantity: 100, price: 1.47))

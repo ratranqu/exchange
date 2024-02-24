@@ -1,13 +1,13 @@
 
-public struct Trade
+public struct Trade: CustomStringConvertible
 {
-    let buyer: String
-    let seller: String
-    let instrument: String
+    let buyer: Participant
+    let seller: Participant
+    let instrument: Instrument
     let quantity: Int
     let price: Double
     
-    public init(buyer: String, seller: String, instrument: String, quantity: Int, price: Double)
+    public init(buyer: Participant, seller: Participant, instrument: Instrument, quantity: Int, price: Double)
     {
         self.buyer = buyer
         self.seller = seller
@@ -16,8 +16,7 @@ public struct Trade
         self.price = price
     }
 
-    public func toString() -> String
-    {
-        return "\(buyer):\(seller):\(instrument):\(quantity):\(price)"
+    public var description: String {
+        "\(buyer):\(seller):\(instrument):\(quantity):\(price)"
     }
 }
