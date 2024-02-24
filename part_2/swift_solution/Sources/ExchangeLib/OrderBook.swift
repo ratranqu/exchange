@@ -14,7 +14,7 @@ class OrderBook3
         var trades : [Trade] = []
 
         if sellOrders.isEmpty {
-            buyOrders.push(consume order)
+            buyOrders.push(order)
             return trades
         }
 
@@ -25,7 +25,7 @@ class OrderBook3
             buyOrders.push(buy)
             return trades
         }
-        let _ = sellOrders.pop()! // we are now certain the quantity will change because the prices will cross
+        _ = sellOrders.pop()! // we are now certain the quantity will change because the prices will cross
 
         while true
         {
@@ -54,7 +54,7 @@ class OrderBook3
                     buyOrders.push(buy)
                     break
                 }
-                sell = s
+                sell = consume s
             }
 
             if buy.price < sell.price {
@@ -86,7 +86,7 @@ class OrderBook3
             return trades
         }
 
-        let _ = buyOrders.pop()! // we are now certain the quantity will change because the prices will cross
+        _ = buyOrders.pop()! // we are now certain the quantity will change because the prices will cross
 
 
         while true
@@ -116,7 +116,7 @@ class OrderBook3
                     sellOrders.push(sell)
                     break
                 }
-                buy = b
+                buy = consume b
             }
 
             if buy.price < sell.price {

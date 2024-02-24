@@ -18,17 +18,18 @@ struct Exchange: ParsableCommand {
     mutating func run() throws {
         let exchange = ExchangeLib.Exchange()
 
-        let order  = Parse(input: ArraySlice<UInt8>.self) {
-            Prefix { $0 != UInt8(ascii: ":") }
+        let order  = Parse(input: Slice<UnsafeBufferPointer<UInt8>>.self) {
+            Prefix { $0 != UInt8(ascii: ":") }.map {ArraySlice<UInt8>($0)}
             StartsWith(":".utf8)
-            Prefix { $0 != UInt8(ascii: ":") }
+            Prefix { $0 != UInt8(ascii: ":") }.map {ArraySlice<UInt8>($0)}
             StartsWith(":".utf8)
             Int.parser()
             StartsWith(":".utf8)
             Double.parser()
+            Skip { Rest() }
         }
 
-        if let orderFilepath { 
+        if let orderFilepath {
             guard let file = freopen(orderFilepath, "r", stdin) else {
                 fatalError("File at \(orderFilepath) not found.")
             }
@@ -36,49 +37,53 @@ struct Exchange: ParsableCommand {
                 fclose(file)
             }
 
-//            let data: Data = fg
+            var buf = [CChar](repeating: 0, count: 128)
 
-            while let line = readLine().map({ ArraySlice($0.utf8) })
-            {
-                if let o = try? order.parse(line), let instrument = String(bytes: o.1, encoding: .utf8), let participant = String(bytes: o.0, encoding: .utf8) {
-                    if o.2 > 0 {
-                        for trade in exchange.insert(instrument: instrument,
-                                                     order: Buy(participant: participant,
-//                                                                instrument: o.1 ?? "I",
-                                                                quantity: o.2, price: o.3)) {
-                            print(trade.toString())
+            while fgets(&buf, CInt(buf.count), file) != nil {
+                let _ = buf.withUnsafeBufferPointer {
+                    $0.withMemoryRebound(to: UInt8.self, {
+                        if let o = try? order.parse($0), let instrument = String(bytes: o.1, encoding: .utf8), let participant = String(bytes: o.0, encoding: .utf8) {
+                            if o.2 > 0 {
+                                for trade in exchange.insert(instrument: instrument,
+                                                           order: Buy(participant:   participant,
+                                                            quantity: o.2, price: o.3)) {
+                                    print(trade.toString())
+                                }
+                            } else {
+                                for trade in exchange.insert(instrument: instrument,
+                                                             order: Sell(participant: participant,
+                                                            quantity: -o.2, price: o.3)) {
+                                    print(trade.toString())
+                                }
+                            }
                         }
-                    } else {
-                        for trade in exchange.insert(instrument: instrument,
-                                                     order: Sell(participant: participant,
-//                                                                 instrument: o.1 ?? "I",
-                                                                 quantity: -o.2, price: o.3)) {
-                            print(trade.toString())
-                        }  
-                    }
+                    })
                 }
             }
         } else {
-            while let line = readLine().map({ ArraySlice($0.utf8) })
-            {
-                if let o = try? order.parse(line), let instrument = String(bytes: o.1, encoding: .utf8), let participant = String(bytes: o.0, encoding: .utf8) {
-                    if o.2 > 0 {
-                        for trade in exchange.insert(instrument: instrument,
-                                                     order: Buy(participant: participant,
-//                                                                instrument: o.1 ?? "I",
-                                                                quantity: o.2, price: o.3)) {
-                            print(trade.toString())
+            var buf = [CChar](repeating: 0, count: 128)
+
+            while fgets(&buf, CInt(buf.count), __stdinp) != nil {
+                let _ = buf.withUnsafeBufferPointer {
+                    $0.withMemoryRebound(to: UInt8.self, {
+                        if let o = try? order.parse($0), let instrument = String(bytes: o.1, encoding: .utf8), let participant = String(bytes: o.0, encoding: .utf8) {
+                            if o.2 > 0 {
+                                for trade in exchange.insert(instrument: instrument,
+                                                             order: Buy(participant:   participant,
+                                                                        quantity: o.2, price: o.3)) {
+                                    print(trade.toString())
+                                }
+                            } else {
+                                for trade in exchange.insert(instrument: instrument,
+                                                             order: Sell(participant: participant,
+                                                                         quantity: -o.2, price: o.3)) {
+                                    print(trade.toString())
+                                }
+                            }
                         }
-                    } else {
-                        for trade in exchange.insert(instrument: instrument,
-                                                     order: Sell(participant: participant,
-//                                                                 instrument: o.1 ?? "I",
-                                                                 quantity: -o.2, price: o.3)) {
-                            print(trade.toString())
-                        }
-                    }
+                    })
                 }
-            }
+            }  
         }
     }
 }

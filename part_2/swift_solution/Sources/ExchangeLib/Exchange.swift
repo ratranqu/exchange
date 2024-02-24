@@ -31,6 +31,6 @@ public class Exchange
             orderBooks[instrument] = orderBook
         }
 
-        return orderBook!.execute(consume order)
+        return orderBook!.execute(order)
     }
 }

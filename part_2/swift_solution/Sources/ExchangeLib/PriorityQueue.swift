@@ -34,7 +34,7 @@ public struct PriorityQueue<T> {
   }
 
     public mutating func push(_ element: consuming T) {
-        heap.insert(consume element)
+        heap.insert(element)
     }
 
   public mutating func pop() -> T? {
@@ -47,7 +47,7 @@ public struct PriorityQueue<T> {
     it should be smaller.
   */
   public mutating func changePriority(index i: Int, value: consuming T) {
-    return heap.replace(index: i, value: consume value)
+    return heap.replace(index: i, value: value)
   }
 }
 
