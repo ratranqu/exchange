@@ -63,7 +63,7 @@ struct Exchange: ParsableCommand {
         } else {
             var buf = [CChar](repeating: 0, count: 128)
 
-            while fgets(&buf, CInt(buf.count), __stdinp) != nil {
+            while fgets(&buf, CInt(buf.count), stdin) != nil {
                 let _ = buf.withUnsafeBufferPointer {
                     $0.withMemoryRebound(to: UInt8.self, {
                         if let o = try? order.parse($0), let instrument = String(bytes: o.1, encoding: .utf8), let participant = String(bytes: o.0, encoding: .utf8) {
