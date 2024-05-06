@@ -10,18 +10,21 @@ import Foundation
 public struct Instrument: Hashable, CustomStringConvertible, ExpressibleByStringLiteral {
     public typealias StringLiteralType = String
 
-    public var description: String { String(bytes: Self.byId[id]!, encoding: .utf8) ?? "" }
+    public var description: String { Self.byId[id] ?? "" }
 
     private let id: Int
 
     private static var existing: Set<Int> = []
-    private static var byId : [Int: ArraySlice<UInt8>] = [:]
+    private static var byId : [Int: String] = [:]
 
-    private static func getBy(_ name: ArraySlice<UInt8>) -> Self {
-        let hash = name.hashValue
+    private static func getBy(_ name: Slice<UnsafeBufferPointer<UInt8>>) -> Self {
+        let hash: Int = name.reduce(0, { partialResult, elt in
+            31 &* partialResult &+ Int(elt)
+        })
+
         if !Self.existing.contains(hash) {
             Self.existing.insert(hash)
-            Self.byId[hash] = name
+            Self.byId[hash] = String(bytes: name, encoding: .utf8)
         }
         return Self(id: hash)
     }
@@ -30,17 +33,17 @@ public struct Instrument: Hashable, CustomStringConvertible, ExpressibleByString
         self.id = id
     }
 
-    public init(_ value: ArraySlice<UInt8>) {
+    public init(_ value: Slice<UnsafeBufferPointer<UInt8>>) {
         self = Self.getBy(value)
     }
 
     public init(_ value: consuming String) {
-        self = Self.getBy(ArraySlice<UInt8>(value.utf8))
+        self = Self.getBy(value.withUTF8({$0}).prefix(while: {_ in true}))
     }
 
     public init?(_ value: consuming String?) {
         guard let value else { return nil }
-        self = Self.getBy(ArraySlice<UInt8>(value.utf8))
+        self.init(value)
     }
 
     public init(stringLiteral value: String) {
@@ -54,18 +57,21 @@ public struct Instrument: Hashable, CustomStringConvertible, ExpressibleByString
 public struct Participant: Hashable, CustomStringConvertible, ExpressibleByStringLiteral {
     public typealias StringLiteralType = String
 
-    public var description: String { String(bytes: Self.byId[id]!, encoding: .utf8) ?? "" }
+    public var description: String { Self.byId[id] ?? "" }
 
     private let id: Int
 
     private static var existing: Set<Int> = []
-    private static var byId : [Int: ArraySlice<UInt8>] = [:]
+    private static var byId : [Int: String] = [:]
 
-    private static func getBy(_ name: ArraySlice<UInt8>) -> Self {
-        let hash = name.hashValue
+    private static func getBy(_ name: Slice<UnsafeBufferPointer<UInt8>>) -> Self {
+        let hash: Int = name.reduce(0, { partialResult, elt in
+            31 &* partialResult &+ Int(elt)
+        })
+
         if !Self.existing.contains(hash) {
             Self.existing.insert(hash)
-            Self.byId[hash] = name
+            Self.byId[hash] = String(bytes: name, encoding: .utf8)
         }
         return Self(id: hash)
     }
@@ -74,17 +80,17 @@ public struct Participant: Hashable, CustomStringConvertible, ExpressibleByStrin
         self.id = id
     }
 
-    public init(_ value: ArraySlice<UInt8>) {
+    public init(_ value: Slice<UnsafeBufferPointer<UInt8>>) {
         self = Self.getBy(value)
     }
 
     public init(_ value: consuming String) {
-        self = Self.getBy(ArraySlice<UInt8>(value.utf8))
+        self = Self.getBy(value.withUTF8({$0}).prefix(while: {_ in true}))
     }
 
     public init?(_ value: consuming String?) {
         guard let value else { return nil }
-        self = Self.getBy(ArraySlice<UInt8>(value.utf8))
+        self.init(value)
     }
 
     public init(stringLiteral value: String) {

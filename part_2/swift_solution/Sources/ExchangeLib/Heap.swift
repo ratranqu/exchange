@@ -14,14 +14,14 @@ public struct Heap<T> {
    * or provide a comparing method if the heap is made
    * of custom elements, for example tuples.
    */
-  private var orderCriteria: (borrowing T, borrowing T) -> Bool
+  private var orderCriteria: (T, T) -> Bool
 
   /**
    * Creates an empty heap.
    * The sort function determines whether this is a min-heap or max-heap.
    * For comparable data types, > makes a max-heap, < makes a min-heap.
    */
-  public init(sort: @escaping (borrowing T, borrowing T) -> Bool) {
+  public init(sort: @escaping (T, T) -> Bool) {
     self.orderCriteria = sort
   }
   
@@ -31,7 +31,7 @@ public struct Heap<T> {
    * sort function. For comparable data types, '>' makes a max-heap,
    * '<' makes a min-heap.
    */
-  public init(array: [T], sort: @escaping (borrowing T, borrowing T) -> Bool) {
+  public init(array: [T], sort: @escaping (T, T) -> Bool) {
     self.orderCriteria = sort
     configureHeap(from: array)
   }

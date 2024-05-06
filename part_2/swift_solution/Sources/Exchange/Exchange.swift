@@ -19,9 +19,9 @@ struct Exchange: ParsableCommand {
         let exchange = ExchangeLib.Exchange()
 
         let order  = Parse(input: Slice<UnsafeBufferPointer<UInt8>>.self) {
-            Prefix { $0 != UInt8(ascii: ":") }.map {Participant(ArraySlice<UInt8>($0))}
+            Prefix { $0 != UInt8(ascii: ":") }.map {Participant($0)}
             StartsWith(":".utf8)
-            Prefix { $0 != UInt8(ascii: ":") }.map {Instrument(ArraySlice<UInt8>($0))}
+            Prefix { $0 != UInt8(ascii: ":") }.map {Instrument($0)}
             StartsWith(":".utf8)
             Int.parser()
             StartsWith(":".utf8)
