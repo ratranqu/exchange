@@ -13,6 +13,10 @@ public struct Instrument: Hashable, CustomStringConvertible, ExpressibleByString
     public var description: String { Self.byId[id] ?? "" }
 
     private let id: Int
+//
+//    public func hash(into hasher: inout Hasher) {
+//        hasher.combine(self.id)
+//    }
 
     private static var existing: Set<Int> = []
     private static var byId : [Int: String] = [:]
@@ -54,7 +58,7 @@ public struct Instrument: Hashable, CustomStringConvertible, ExpressibleByString
 
 
 
-public struct Participant: Hashable, CustomStringConvertible, ExpressibleByStringLiteral {
+public struct Participant: Equatable, CustomStringConvertible, ExpressibleByStringLiteral {
     public typealias StringLiteralType = String
 
     public var description: String { Self.byId[id] ?? "" }
@@ -97,3 +101,4 @@ public struct Participant: Hashable, CustomStringConvertible, ExpressibleByStrin
         self.init(value)
     }
 }
+

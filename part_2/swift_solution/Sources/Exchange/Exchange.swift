@@ -9,6 +9,7 @@ import Glibc
 import Darwin
 #endif
 
+
 @main
 struct Exchange: ParsableCommand {
 
@@ -18,13 +19,15 @@ struct Exchange: ParsableCommand {
     mutating func run() throws {
         let exchange = ExchangeLib.Exchange()
 
+        let colon = StartsWith<Slice<UnsafeBufferPointer<UInt8>>>(":".utf8)
+
         let order  = Parse(input: Slice<UnsafeBufferPointer<UInt8>>.self) {
             Prefix { $0 != UInt8(ascii: ":") }.map {Participant($0)}
-            StartsWith(":".utf8)
+            colon
             Prefix { $0 != UInt8(ascii: ":") }.map {Instrument($0)}
-            StartsWith(":".utf8)
+            colon
             Int.parser()
-            StartsWith(":".utf8)
+            colon
             Double.parser()
             Skip { Rest() }
         }
