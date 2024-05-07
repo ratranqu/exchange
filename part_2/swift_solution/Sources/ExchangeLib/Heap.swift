@@ -3,11 +3,14 @@
 //  Written for the Swift Algorithm Club by Kevin Randrup and Matthijs Hollemans
 //
 
+import Foundation
+
 public struct Heap<T> {
   
   /** The array that stores the heap's nodes. */
-  var nodes = [T]()
-  
+  var nodes = ContiguousArray<T>()
+//    [T]()
+
   /**
    * Determines how to compare two nodes in the heap.
    * Use '>' for a max-heap or '<' for a min-heap,
@@ -41,7 +44,7 @@ public struct Heap<T> {
    * Performance: This runs pretty much in O(n).
    */
   private mutating func configureHeap(from array: [T]) {
-    nodes = array
+    nodes = ContiguousArray(array)
     for i in stride(from: (nodes.count/2-1), through: 0, by: -1) {
       shiftDown(i)
     }

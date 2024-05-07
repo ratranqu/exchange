@@ -3,12 +3,12 @@ import Foundation
 public struct Buy: Comparable {
 
     public let participant: Participant
-    public var quantity: Int
+    public var quantity: Int32
     public let price: Double
     public let generation: Int
 
     public init(participant: Participant,
-                quantity: Int, price: Double, generation: Int = Generator.next) {
+                quantity: Int32, price: Double, generation: Int = Generator.next) {
         self.participant = participant
         self.quantity = quantity
         self.price = price
@@ -23,12 +23,12 @@ public struct Buy: Comparable {
 
 public struct Sell: Comparable {
     public let participant: Participant
-    public var quantity: Int
+    public var quantity: Int32
     public let price: Double
     public let generation: Int
 
     public init(participant: Participant,
-                quantity: Int, price: Double, generation: Int = Generator.next) {
+                quantity: Int32, price: Double, generation: Int = Generator.next) {
         self.participant = participant
         self.quantity = quantity
         self.price = price

@@ -12,18 +12,18 @@ public struct Instrument: Hashable, CustomStringConvertible, ExpressibleByString
 
     public var description: String { Self.byId[id] ?? "" }
 
-    private let id: Int
+    private let id: Int32
 //
 //    public func hash(into hasher: inout Hasher) {
 //        hasher.combine(self.id)
 //    }
 
-    private static var existing: Set<Int> = []
-    private static var byId : [Int: String] = [:]
+    private static var existing: Set<Int32> = []
+    private static var byId : [Int32: String] = [:]
 
     private static func getBy(_ name: Slice<UnsafeBufferPointer<UInt8>>) -> Self {
-        let hash: Int = name.reduce(0, { partialResult, elt in
-            31 &* partialResult &+ Int(elt)
+        let hash: Int32 = name.reduce(0, { partialResult, elt in
+            31 &* partialResult &+ Int32(elt)
         })
 
         if !Self.existing.contains(hash) {
@@ -33,7 +33,7 @@ public struct Instrument: Hashable, CustomStringConvertible, ExpressibleByString
         return Self(id: hash)
     }
 
-    private init(id: Int) {
+    private init(id: Int32) {
         self.id = id
     }
 
@@ -63,14 +63,14 @@ public struct Participant: Equatable, CustomStringConvertible, ExpressibleByStri
 
     public var description: String { Self.byId[id] ?? "" }
 
-    private let id: Int
+    private let id: Int32
 
-    private static var existing: Set<Int> = []
-    private static var byId : [Int: String] = [:]
+    private static var existing: Set<Int32> = []
+    private static var byId : [Int32: String] = [:]
 
     private static func getBy(_ name: Slice<UnsafeBufferPointer<UInt8>>) -> Self {
-        let hash: Int = name.reduce(0, { partialResult, elt in
-            31 &* partialResult &+ Int(elt)
+        let hash: Int32 = name.reduce(0, { partialResult, elt in
+            31 &* partialResult &+ Int32(elt)
         })
 
         if !Self.existing.contains(hash) {
@@ -80,7 +80,7 @@ public struct Participant: Equatable, CustomStringConvertible, ExpressibleByStri
         return Self(id: hash)
     }
 
-    private init(id: Int) {
+    private init(id: Int32) {
         self.id = id
     }
 

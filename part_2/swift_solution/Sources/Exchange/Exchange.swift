@@ -26,7 +26,7 @@ struct Exchange: ParsableCommand {
             colon
             Prefix { $0 != UInt8(ascii: ":") }.map {Instrument($0)}
             colon
-            Int.parser()
+            Int32.parser()
             colon
             Double.parser()
             Skip { Rest() }
