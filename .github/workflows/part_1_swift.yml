@@ -15,9 +15,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    container: swift:jammy
 
     steps:
-    - uses: swift-actions/setup-swift@v1
     - name: checkout
       uses: actions/checkout@v4
     - name: build
