@@ -2,7 +2,7 @@ import Foundation
 
 public class Exchange
 {
-    var orderBooks : [Instrument : OrderBook] = [:]
+    var orderBooks : [StringHash : OrderBook] = [:]
 
     public init()
     {

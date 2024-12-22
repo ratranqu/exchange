@@ -17,6 +17,6 @@ public struct Trade: CustomStringConvertible
     }
 
     public var description: String {
-        "\(buyer):\(seller):\(instrument):\(quantity):\(price)"
+        "\(Lookup.decode(buyer)):\(Lookup.decode(seller)):\(Lookup.decode(instrument)):\(quantity):\(price)"
     }
 }

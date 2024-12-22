@@ -7,98 +7,45 @@
 
 import Foundation
 
-public struct Instrument: Hashable, CustomStringConvertible, ExpressibleByStringLiteral {
-    public typealias StringLiteralType = String
+public typealias StringHash = Int32
 
-    public var description: String { Self.byId[id] ?? "" }
+public typealias Instrument = StringHash
+public typealias Participant = StringHash
 
-    private let id: Int32
-//
-//    public func hash(into hasher: inout Hasher) {
-//        hasher.combine(self.id)
-//    }
+private var byId : [StringHash: String] = [:]
 
-    private static var existing: Set<Int32> = []
-    private static var byId : [Int32: String] = [:]
 
-    private static func getBy(_ name: Slice<UnsafeBufferPointer<UInt8>>) -> Self {
-        let hash: Int32 = name.reduce(0, { partialResult, elt in
-            31 &* partialResult &+ Int32(elt)
+public enum Lookup {
+    public static func encode(_ name: Slice<UnsafeBufferPointer<UInt8>>) -> StringHash {
+        let hash: StringHash = name.reduce(0, { partialResult, elt in
+            31 &* partialResult &+ StringHash(elt)
         })
 
-        if !Self.existing.contains(hash) {
-            Self.existing.insert(hash)
-            Self.byId[hash] = String(bytes: name, encoding: .utf8)
+
+        if byId.keys.contains(hash) {
+            return hash
+        } else {
+            byId[hash] = String(bytes: name, encoding: .utf8)
         }
-        return Self(id: hash)
+
+        return hash
     }
 
-    private init(id: Int32) {
-        self.id = id
-    }
-
-    public init(_ value: Slice<UnsafeBufferPointer<UInt8>>) {
-        self = Self.getBy(value)
-    }
-
-    public init(_ value: consuming String) {
-        self = Self.getBy(value.withUTF8({$0}).prefix(while: {_ in true}))
-    }
-
-    public init?(_ value: consuming String?) {
-        guard let value else { return nil }
-        self.init(value)
-    }
-
-    public init(stringLiteral value: String) {
-        self.init(value)
-    }
-}
-
-
-
-
-public struct Participant: Equatable, CustomStringConvertible, ExpressibleByStringLiteral {
-    public typealias StringLiteralType = String
-
-    public var description: String { Self.byId[id] ?? "" }
-
-    private let id: Int32
-
-    private static var existing: Set<Int32> = []
-    private static var byId : [Int32: String] = [:]
-
-    private static func getBy(_ name: Slice<UnsafeBufferPointer<UInt8>>) -> Self {
-        let hash: Int32 = name.reduce(0, { partialResult, elt in
-            31 &* partialResult &+ Int32(elt)
+    public static func encode(_ name: borrowing String) -> StringHash {
+        let hash: StringHash = name.cString(using: .utf8)!.reduce(0, { partialResult, elt in
+            31 &* partialResult &+ StringHash(elt)
         })
 
-        if !Self.existing.contains(hash) {
-            Self.existing.insert(hash)
-            Self.byId[hash] = String(bytes: name, encoding: .utf8)
+        if byId.keys.contains(hash) {
+            return hash
+        } else {
+            byId[hash] = copy name
         }
-        return Self(id: hash)
+        return hash
     }
 
-    private init(id: Int32) {
-        self.id = id
+    public static func decode(_ value: StringHash) -> String {
+        byId[value] ?? ""
     }
 
-    public init(_ value: Slice<UnsafeBufferPointer<UInt8>>) {
-        self = Self.getBy(value)
-    }
-
-    public init(_ value: consuming String) {
-        self = Self.getBy(value.withUTF8({$0}).prefix(while: {_ in true}))
-    }
-
-    public init?(_ value: consuming String?) {
-        guard let value else { return nil }
-        self.init(value)
-    }
-
-    public init(stringLiteral value: String) {
-        self.init(value)
-    }
 }
-

@@ -7,16 +7,23 @@ public struct Buy: Comparable {
     public let price: Double
     public let generation: Int
 
-    public init(participant: Participant,
-                quantity: Int32, price: Double, generation: Int = Generator.next) {
+    public init(_ quantity: Int32, at price: Double, from participant: Participant, generation: Int = Generator.next) {
         self.participant = participant
         self.quantity = quantity
         self.price = price
         self.generation = generation
     }
 
-    public static func < (lhs: Buy, rhs: Buy) -> Bool {
-        lhs.price > rhs.price || (lhs.price == rhs.price && lhs.generation < rhs.generation)
+    @inlinable public static func < (lhs: borrowing Buy, rhs: borrowing Buy) -> Bool {
+        let lp = lhs.price
+        let rp = rhs.price
+        if lp > rp { return true }
+        else if lp == rp {
+            let lg = lhs.generation
+            let rg = rhs.generation
+            return lg < rg
+        }
+        return false
     }
 }
 
@@ -27,16 +34,23 @@ public struct Sell: Comparable {
     public let price: Double
     public let generation: Int
 
-    public init(participant: Participant,
-                quantity: Int32, price: Double, generation: Int = Generator.next) {
+    public init(_ quantity: Int32, at price: Double, from participant: Participant, generation: Int = Generator.next) {
         self.participant = participant
         self.quantity = quantity
         self.price = price
         self.generation = generation
     }
 
-    public static func < (lhs: Sell, rhs: Sell) -> Bool {
-        lhs.price < rhs.price || (lhs.price == rhs.price && lhs.generation < rhs.generation)
+    public static func < (lhs: borrowing Sell, rhs: borrowing Sell) -> Bool {
+        let lp = lhs.price
+        let rp = rhs.price
+        if lp < rp { return true }
+        else if lp == rp {
+            let lg = lhs.generation
+            let rg = rhs.generation
+            return lg < rg
+        }
+        return false
     }
 }
 

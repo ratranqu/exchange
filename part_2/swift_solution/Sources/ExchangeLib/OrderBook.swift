@@ -11,21 +11,17 @@ class OrderBook
 
     public func execute(_ order: consuming Buy) -> [Trade]
     {
-        var trades : [Trade] = []
 
-        if sellOrders.isEmpty {
+        if sellOrders.isEmpty || order.price < sellOrders.peek()!.price {
+            // if no cross, we can return
             buyOrders.push(order)
-            return trades
+            return []
         }
+
+        var sell = sellOrders.pop()! // we are now certain the quantity will change because the prices will cross
 
         var buy = consume order
-        var sell = sellOrders.peek()!
-        if buy.price < sell.price {
-            // if no cross, we can return
-            buyOrders.push(buy)
-            return trades
-        }
-        _ = sellOrders.pop()! // we are now certain the quantity will change because the prices will cross
+        var trades : [Trade] = []
 
         while true
         {
@@ -72,22 +68,17 @@ class OrderBook
 
     public func execute(_ order: consuming Sell) -> [Trade]
     {
-        var trades : [Trade] = []
 
-        if buyOrders.isEmpty {
+        if buyOrders.isEmpty || buyOrders.peek()!.price < order.price {
+            // if no cross, we can return
             sellOrders.push(order)
-            return trades
+            return []
         }
 
-        var buy = buyOrders.peek()!
+        var buy = buyOrders.pop()! // we are now certain the quantity will change because the prices will cross
+
         var sell = consume order
-        if buy.price < sell.price {
-            sellOrders.push(sell)
-            return trades
-        }
-
-        _ = buyOrders.pop()! // we are now certain the quantity will change because the prices will cross
-
+        var trades : [Trade] = []
 
         while true
         {

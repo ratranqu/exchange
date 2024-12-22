@@ -26,7 +26,8 @@ let package = Package(
                 .unsafeFlags(["-static-stdlib"], .when(platforms: [.linux])),
             ]
         ),
-        .target(name: "ExchangeLib", dependencies: []),
+        .target(name: "ExchangeLib", dependencies: [.product(name: "Parsing", package: "swift-parsing"),
+                                                    .product(name: "ArgumentParser", package: "swift-argument-parser")]),
         .testTarget(name: "Tests", dependencies: ["ExchangeLib"], path: "Tests")
     ]
 )

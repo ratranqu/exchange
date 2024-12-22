@@ -97,8 +97,26 @@ public struct Heap<T> {
    * or min-heap property still holds. Performance: O(log n).
    */
   public mutating func insert(_ value: consuming T) {
-    nodes.append(consume value)
-    shiftUp(nodes.count - 1)
+//      nodes.append(consume value)
+//      shiftUp(nodes.count - 1)
+
+      var childIndex = nodes.count
+      let child = consume value
+      nodes.append(child)
+      var parentIndex = self.parentIndex(ofIndex: childIndex)
+      var parent = nodes.withUnsafeBufferPointer { $0[parentIndex] }
+
+      while childIndex > 0 && orderCriteria(child,parent) {
+//          let n = nodes.withUnsafeBufferPointer { $0[parentIndex] }
+          nodes.withUnsafeMutableBufferPointer { $0[childIndex] = parent}
+          childIndex = parentIndex
+          parentIndex = self.parentIndex(ofIndex: childIndex)
+          parent = nodes.withUnsafeBufferPointer { $0[parentIndex] }
+      }
+
+      nodes.withUnsafeMutableBufferPointer { $0[childIndex] = child}
+
+
   }
   
   /**
@@ -137,7 +155,6 @@ public struct Heap<T> {
         let value = nodes.first
         let n = nodes.removeLast()
         nodes.withUnsafeMutableBufferPointer { $0[0] = n }
-      //nodes[0] = nodes.removeLast()
       shiftDown(0)
       return value
     }
@@ -164,16 +181,17 @@ public struct Heap<T> {
    * (max-heap) or not smaller (min-heap) than the child, we exchange them.
    */
   internal mutating func shiftUp(_ index: Int) {
-    var childIndex = index
+      var childIndex = index
       let child = nodes.withUnsafeBufferPointer { $0[childIndex] }
-    var parentIndex = self.parentIndex(ofIndex: childIndex)
-    
-      while childIndex > 0 && orderCriteria(child, nodes.withUnsafeBufferPointer { $0[parentIndex] }) {
-          let n = nodes.withUnsafeBufferPointer { $0[parentIndex] }
-          nodes.withUnsafeMutableBufferPointer { $0[childIndex] = n}
-      childIndex = parentIndex
-      parentIndex = self.parentIndex(ofIndex: childIndex)
-    }
+      var parentIndex = self.parentIndex(ofIndex: childIndex)
+      var parent = nodes.withUnsafeBufferPointer { $0[parentIndex] }
+      
+      while childIndex > 0 && orderCriteria(child,parent) {
+          nodes.withUnsafeMutableBufferPointer { $0[childIndex] = parent}
+          childIndex = parentIndex
+          parentIndex = self.parentIndex(ofIndex: childIndex)
+          parent = nodes.withUnsafeBufferPointer { $0[parentIndex] }
+      }
     
       nodes.withUnsafeMutableBufferPointer { $0[childIndex] = child}
   }
