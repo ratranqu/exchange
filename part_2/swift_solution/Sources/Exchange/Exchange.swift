@@ -16,18 +16,18 @@ struct Exchange: ParsableCommand {
     var orderFilepath: String?
 
     mutating func run() throws {
-        let exchange = ExchangeLib.Exchange()
-
+        let colon = UInt8(ascii: ":")
         let order  = Parse(input: Slice<UnsafeBufferPointer<UInt8>>.self) {
-            Prefix { $0 != UInt8(ascii: ":") }.map {Participant(Lookup.encode($0))}
+            Prefix { $0 != colon }//.map {Participant($0)}
             Skip { First() }
-            Prefix { $0 != UInt8(ascii: ":") }.map {Instrument(Lookup.encode($0))}
+            Prefix { $0 != colon }//.map {Instrument.getOrderBook($0)}
             Skip { First() }
             Int32.parser()
             Skip { First() }
             Double.parser()
             Skip { Rest() }
         }
+            .map {(Participant($0), Instrument.getOrderBook($1).1, $2, $3)}
 
         let file: UnsafeMutablePointer<FILE>
         if let orderFilepath {
@@ -39,7 +39,7 @@ struct Exchange: ParsableCommand {
             file = stdin
         }
         defer {
-            if let orderFilepath {
+            if orderFilepath != nil {
                 fclose(file)
             }
         }
@@ -47,15 +47,15 @@ struct Exchange: ParsableCommand {
         var buf = [CChar](repeating: 0, count: 128)
 
         while fgets(&buf, CInt(buf.count), file) != nil {
-            let _ = buf.withUnsafeBufferPointer {
+           let _ = buf.withUnsafeBufferPointer {
                 $0.withMemoryRebound(to: UInt8.self, {
                     if let o = try? order.parse($0) {
                         if o.2 > 0 {
-                            exchange.insert(instrument: o.1,
-                                            order: Buy(o.2, at: o.3, from: o.0)).map {print($0)}
+//                            o.1.execute(Buy(o.2, at: o.3, from: o.0), Trade.init).map {print($0)}
+                            o.1.execute(Buy(o.2, at: o.3, from: o.0), printer())//.map {print($0)}
                         } else {
-                            exchange.insert(instrument: o.1,
-                                            order: Sell(-o.2, at: o.3, from: o.0)).map {print($0)}
+//                            o.1.execute(Sell(-o.2, at: o.3, from: o.0), Trade.init).map {print($0)}
+                            o.1.execute(Sell(-o.2, at: o.3, from: o.0), printer())//.map {print($0)}
                         }
                     }
                 })

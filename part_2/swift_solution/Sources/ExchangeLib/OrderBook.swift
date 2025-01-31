@@ -1,53 +1,49 @@
-class OrderBook
+import Collections
+
+public final class OrderBook
 {
     let instrument: Instrument
-    var buyOrders: PriorityQueue<Buy> = PriorityQueue<Buy>(sort: <)
+    var buyOrders: Heap<Buy> = Heap<Buy>()
 
-    var sellOrders: PriorityQueue<Sell> = PriorityQueue<Sell>(sort: <)
+    var sellOrders: Heap<Sell> = Heap<Sell>()
 
     init(for instrument: Instrument) {
         self.instrument = instrument
     }
 
-    public func execute(_ order: consuming Buy) -> [Trade]
+    public func execute<T>(_ order: consuming Buy, _ accumulator: (Participant, Participant, Instrument, Int32, Double) -> T) -> [T]
     {
 
-        if sellOrders.isEmpty || order.price < sellOrders.peek()!.price {
+        if sellOrders.isEmpty || order.price < sellOrders.min!.price {
             // if no cross, we can return
-            buyOrders.push(order)
+            buyOrders.insert(order)
             return []
         }
 
-        var sell = sellOrders.pop()! // we are now certain the quantity will change because the prices will cross
+        var sell = sellOrders.removeMin() // we are now certain the quantity will change because the prices will cross
 
         var buy = consume order
-        var trades : [Trade] = []
-
+        var trades: [T] = []
         while true
         {
             let quantity = min(buy.quantity, sell.quantity)
             let price = buy.generation < sell.generation ? buy.price : sell.price
 
-            trades.append(Trade(buyer: buy.participant,
-                                seller: sell.participant,
-                                instrument: instrument,
-                                quantity: quantity,
-                                price: price)
-            )
+            trades.append(accumulator(buy.participant, sell.participant, instrument, quantity, price))
 
             if buy.quantity == quantity { // full order filled
                 if sell.quantity != quantity {
                     // if current best ask not filled, push remaining size back
                     sell.quantity -= quantity
-                    sellOrders.push(sell)
+                    sellOrders.insert(sell)
                 }
                 break // done
             } else { // partial order filled
                 buy.quantity -= quantity
                 // try to get next best ask
-                guard let s = sellOrders.pop() else {
+                guard let s = sellOrders.popMin() else {
                     // if none, push remaining buy order and done
-                    buyOrders.push(buy)
+                    buyOrders.insert(buy)
                     break
                 }
                 sell = consume s
@@ -55,10 +51,10 @@ class OrderBook
 
             if buy.price < sell.price {
                 // push the open incoming order to the book before returning
-                buyOrders.push(buy)
+                buyOrders.insert(buy)
                 if sell.quantity != 0 {
                     // push the partially filled ask to the book before returning
-                    sellOrders.push(sell)
+                    sellOrders.insert(sell)
                 }
                 break
             }
@@ -66,45 +62,39 @@ class OrderBook
         return trades
     }
 
-    public func execute(_ order: consuming Sell) -> [Trade]
+    public func execute<T>(_ order: consuming Sell, _ accumulator: (Participant, Participant, Instrument, Int32, Double) -> T) -> [T]
     {
 
-        if buyOrders.isEmpty || buyOrders.peek()!.price < order.price {
+        if buyOrders.isEmpty || buyOrders.min!.price < order.price {
             // if no cross, we can return
-            sellOrders.push(order)
+            sellOrders.insert(order)
             return []
         }
 
-        var buy = buyOrders.pop()! // we are now certain the quantity will change because the prices will cross
+        var buy = buyOrders.removeMin() // we are now certain the quantity will change because the prices will cross
 
         var sell = consume order
-        var trades : [Trade] = []
+        var trades : [T] = []
 
         while true
         {
             let quantity = min(buy.quantity, sell.quantity)
             let price = buy.generation < sell.generation ? buy.price : sell.price
 
-            trades.append(Trade(buyer: buy.participant,
-                                seller: sell.participant,
-                                instrument: instrument,
-                                quantity: quantity,
-                                price: price)
-            )
-
+            trades.append(accumulator(buy.participant, sell.participant, instrument, quantity, price))
 
             if sell.quantity == quantity { // full order filled
                 if buy.quantity != quantity { // if current best bid not filled, push remaining size back
                     buy.quantity -= quantity
-                    buyOrders.push(buy)
+                    buyOrders.insert(buy)
                 }
                 break // done
             } else { // partial order filled
                 sell.quantity -= quantity
                 // try to get next best bid
-                guard let b = buyOrders.pop() else {
+                guard let b = buyOrders.popMin() else {
                     // if none, push remaining sell order and done
-                    sellOrders.push(sell)
+                    sellOrders.insert(sell)
                     break
                 }
                 buy = consume b
@@ -112,10 +102,10 @@ class OrderBook
 
             if buy.price < sell.price {
                 // push the open incoming order to the book before returning
-                sellOrders.push(sell)
+                sellOrders.insert(sell)
                 if buy.quantity != 0 {
                     // push the partially filled bid to the book before returning
-                    buyOrders.push(buy)
+                    buyOrders.insert(buy)
                 }
                 break
             }
