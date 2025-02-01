@@ -124,8 +124,8 @@ for order_count, solutions in results.items():
     fastest = datetime.timedelta(seconds=solutions[0][1])
     for solution in solutions:
         current=datetime.timedelta(seconds=solution[1])
-        time = str()
-        print('|{}|{}|{}|{}|'.format(language(solution[0]), time, (current - fastest) / fastest, solution[2]))
+        time = str(current)
+        print('|{}|{}|{0:.0f}|{}|'.format(language(solution[0]), time, (current - fastest) / fastest * 100, solution[2]))
     print("\n")
 
 
