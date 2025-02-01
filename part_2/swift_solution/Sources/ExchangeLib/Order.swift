@@ -7,6 +7,7 @@ public struct Buy: Comparable {
     public let price: Double
     public let generation: Int
 
+    @inlinable
     public init(_ quantity: Int32, at price: Double, from participant: Participant, generation: Int = Generator.next) {
         self.participant = participant
         self.quantity = quantity
@@ -34,6 +35,7 @@ public struct Sell: Comparable {
     public let price: Double
     public let generation: Int
 
+    @inlinable
     public init(_ quantity: Int32, at price: Double, from participant: Participant, generation: Int = Generator.next) {
         self.participant = participant
         self.quantity = quantity
@@ -41,6 +43,7 @@ public struct Sell: Comparable {
         self.generation = generation
     }
 
+    @inlinable
     public static func < (lhs: borrowing Sell, rhs: borrowing Sell) -> Bool {
         let lp = lhs.price
         let rp = rhs.price

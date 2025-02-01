@@ -11,7 +11,7 @@ let package = Package(
         .watchOS(.v6),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-parsing", .exact( "0.13.0")),
+        .package(url: "https://github.com/pointfreeco/swift-parsing", exact: "0.13.0"),
 //        .package(url: "https://github.com/ratranqu/swift-parsing", branch: "main"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
         .package(

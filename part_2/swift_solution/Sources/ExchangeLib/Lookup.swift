@@ -10,22 +10,6 @@ import Collections
 
 public typealias StringHash = Int
 
-
-public struct Exchange {
-    public func execute(participant: borrowing Slice<UnsafeBufferPointer<UInt8>>,
-                            instrument: borrowing Slice<UnsafeBufferPointer<UInt8>>,
-                            quantity: Int32,
-                            price: Double) -> [Trade] {
-        
-        
-        if quantity > 0 {
-            
-        }
-        return []
-    }
-}
-
-
 public struct Instrument: Hashable, CustomStringConvertible, ExpressibleByStringLiteral {
     public typealias StringLiteralType = String
 

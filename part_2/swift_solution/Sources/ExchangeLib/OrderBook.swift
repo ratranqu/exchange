@@ -2,15 +2,18 @@ import Collections
 
 public final class OrderBook
 {
+    @usableFromInline
     let instrument: Instrument
+    @usableFromInline
     var buyOrders: Heap<Buy> = Heap<Buy>()
-
+    @usableFromInline
     var sellOrders: Heap<Sell> = Heap<Sell>()
 
     init(for instrument: Instrument) {
         self.instrument = instrument
     }
 
+    @inlinable
     public func execute<T>(_ order: consuming Buy, _ accumulator: (Participant, Participant, Instrument, Int32, Double) -> T) -> [T]
     {
 
@@ -62,6 +65,7 @@ public final class OrderBook
         return trades
     }
 
+    @inlinable
     public func execute<T>(_ order: consuming Sell, _ accumulator: (Participant, Participant, Instrument, Int32, Double) -> T) -> [T]
     {
 
