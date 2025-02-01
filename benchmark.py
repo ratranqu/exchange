@@ -125,7 +125,8 @@ for order_count, solutions in results.items():
     for solution in solutions:
         current=datetime.timedelta(seconds=solution[1])
         time = str(current)
-        print('|{}|{}|{0:.0f}|{}|'.format(language(solution[0]), time, (current - fastest) / fastest * 100, solution[2]))
+        percent =  '{0:.0f}'.format((current - fastest) / fastest * 100)
+        print('|{}|{}|{}|{}|'.format(language(solution[0]), time, percent, solution[2]))
     print("\n")
 
 
