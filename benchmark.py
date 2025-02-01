@@ -119,11 +119,13 @@ def language(solution):
 
 for order_count, solutions in results.items():
     solutions.sort(key=lambda solution: solution[1])
-    print('||{} orders|trades|'.format(human_format(order_count)))
-    print('-|:-:|:-:|')
+    print('||{} orders|% over fastest|trades|'.format(human_format(order_count)))
+    print('-|:-:|:-:|:-:|')
+    fastest = datetime.timedelta(seconds=solutions[0][1])
     for solution in solutions:
-        time = str(datetime.timedelta(seconds=solution[1]))
-        print('|{}|{}|{}|'.format(language(solution[0]), time, solution[2]))
+        current=datetime.timedelta(seconds=solution[1])
+        time = str()
+        print('|{}|{}|{}|{}|'.format(language(solution[0]), time, (current - fastest) / fastest, solution[2]))
     print("\n")
 
 
